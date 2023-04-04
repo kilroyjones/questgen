@@ -4,6 +4,7 @@
 	import { FileData, processFiles } from './preprocess';
 
 	let stagedFiles: Array<FileData> = [];
+	let isStagingFiles: boolean = false;
 	let rejectFiles: Array<string> = [];
 	let tokenTotal: number = 0;
 
@@ -22,6 +23,7 @@
 
 	async function onStageFiles(event: CustomEvent) {
 		if (event.detail.acceptedFiles.length > 0) {
+			isStagingFiles = true;
 			let files: Array<File> = event.detail.acceptedFiles;
 			let results = await processFiles(files);
 			stagedFiles.push(...results[0]);
@@ -29,11 +31,11 @@
 			stagedFiles = stagedFiles;
 			rejectFiles = rejectFiles;
 			tokenTotal = stagedFiles.reduce((tokens, file) => tokens + file.tokenCount, 0);
+			isStagingFiles = false;
 		}
 	}
 
 	async function remove(name: string) {
-		console.log(stagedFiles);
 		stagedFiles = stagedFiles.filter((file) => {
 			if (file.name !== name) {
 				return true;
@@ -67,12 +69,27 @@
 			on:click={async (e) => await onStageFiles(e)}
 		/>
 
+		<div class="divider" />
 		{#each stagedFiles as file}
 			<Source filename={file.name} on:click={() => remove(file.name)} />
 		{/each}
 
-		<div class="divider" />
-		<div>Tokens: {tokenTotal}</div>
+		{#if isStagingFiles}
+			<div class="mb-6 mt-2 flex justify-center">
+				<img src="images/loading.gif" alt="Loading" />
+			</div>
+		{/if}
+
+		{#if stagedFiles.length > 0 || isStagingFiles}
+			<div class="divider" />
+		{/if}
+
+		<div class="flex mb-2">
+			<div class="flex-1 font-bold">Tokens: <span class="text-primary">{tokenTotal}</span></div>
+			<div class="flex-1 font-bold">
+				Estimated queries: <span class="text-primary">{Math.round(tokenTotal / 3000)}</span>
+			</div>
+		</div>
 		<button class="btn" on:click={generate}> Generate </button>
 	</div>
 	<div class="w-full md:w-1/4" />
