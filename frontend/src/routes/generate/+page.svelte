@@ -2,6 +2,8 @@
 	import Source from '$lib/generate/Source.svelte';
 	import Dropzone from 'svelte-file-dropzone/Dropzone.svelte';
 	import { FileData, processFiles } from './preprocess';
+	import SourceDetails from '$lib/generate/SourceDetails.svelte';
+	import Tags from '$lib/generate/Tags.svelte';
 
 	let stagedFiles: Array<FileData> = [];
 	let isStagingFiles: boolean = false;
@@ -69,8 +71,8 @@
 			on:click={async (e) => await onStageFiles(e)}
 		/>
 
-		<div class="divider" />
 		{#each stagedFiles as file}
+			<div class="divider" />
 			<Source filename={file.name} on:click={() => remove(file.name)} />
 		{/each}
 
@@ -81,16 +83,16 @@
 		{/if}
 
 		{#if stagedFiles.length > 0 || isStagingFiles}
-			<div class="divider" />
-		{/if}
-
-		<div class="flex mb-2">
-			<div class="flex-1 font-bold">Tokens: <span class="text-primary">{tokenTotal}</span></div>
-			<div class="flex-1 font-bold">
-				Estimated queries: <span class="text-primary">{Math.round(tokenTotal / 3000)}</span>
+			<div class="mt-5">
+				<SourceDetails {tokenTotal} />
 			</div>
-		</div>
-		<button class="btn" on:click={generate}> Generate </button>
+
+			<div class="mt-5 mb-5">
+				<Tags />
+			</div>
+
+			<div class="divider" />
+			<button class="btn" on:click={generate}> Generate </button>
+		{/if}
 	</div>
-	<div class="w-full md:w-1/4" />
 </div>
