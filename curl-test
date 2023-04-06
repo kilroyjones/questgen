@@ -1,0 +1,14 @@
+curl https://api.openai.com/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer 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' \
+  -d '{
+  "model": "gpt-3.5-turbo",
+  "messages: [
+   { "role": "system", "content": "You are a computer system teacher" },
+    {
+      "role": "user",
+      "content": "Given the following content, create 8 multiple choice questions for IGCSE Computer Science high school class. Make option (a), the first option, always the correct answer.  Content is as follows: {$content} "
+    }      ],
+  "max_tokens": 7,
+  "temperature": 0
+}'
