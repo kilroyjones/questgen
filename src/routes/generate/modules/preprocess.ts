@@ -1,7 +1,7 @@
 import * as pdfjs from "pdfjs-dist";
 import { encoding_for_model } from "@dqbd/tiktoken";
 import type { TextItem } from "pdfjs-dist/types/src/display/api";
-import { FileData, FileType } from "./models";
+import { FileData, FileType } from "$lib/models";
 
 pdfjs.GlobalWorkerOptions.workerSrc = "pdf.worker.min.js";
 const enc = encoding_for_model("gpt-3.5-turbo");

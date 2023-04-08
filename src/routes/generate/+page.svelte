@@ -2,7 +2,7 @@
   import Source from "./components/Source.svelte";
   import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
   import { processFiles } from "./modules/preprocess";
-  import type { FileData } from "./modules/models";
+  import type { FileData } from "$lib/models";
   import SourceDetails from "./components/SourceDetails.svelte";
   import Tags from "./components/Tags.svelte";
   import CollectionParameters from "./components/CollectionParameters.svelte";

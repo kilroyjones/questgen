@@ -17,3 +17,13 @@ export class FileData {
     this.fileType = fileType;
   }
 }
+
+export class MultipleChoice {
+  question: string;
+  answers: Array<string>;
+
+  constructor(question: string, answers: Array<string>) {
+    this.question = question;
+    this.answers = answers;
+  }
+}
