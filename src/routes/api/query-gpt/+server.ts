@@ -2,16 +2,18 @@ import { env } from "$env/dynamic/private";
 import { MultipleChoice } from "$lib/models";
 import type { RequestHandler } from "./$types";
 import { Configuration, OpenAIApi } from "openai";
+import { PrismaClient } from "@prisma/client";
 
 const configuration = new Configuration({
   apiKey: env.PRIVATE_OPENAI_KEY,
 });
 const openai = new OpenAIApi(configuration);
+const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ request }) => {
   let data = await request.json();
   // console.log(data.content.substring(0, 100));
-  // console.log("Making a request!");
+  console.log("Making a request!");
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -29,7 +31,29 @@ export const POST: RequestHandler = async ({ request }) => {
       let content = completion.data.choices[0].message?.content;
       if (content) {
         let questions = await parseQuestions(content);
-        console.log(questions);
+        for (const question of questions) {
+          console.log(question);
+          const newQuestion = await prisma.multipleChoiceQuestion.create({
+            data: {
+              question: question.question,
+            },
+            select: {
+              id: true,
+            },
+          });
+          let isCorrect = 1;
+          for (const answer of question.answers) {
+            console.log(answer);
+            await prisma.multipleChoiceAnswer.create({
+              data: {
+                question_id: newQuestion.id,
+                answer: answer,
+                is_correct: isCorrect,
+              },
+            });
+            isCorrect = 0;
+          }
+        }
       }
     } catch {
       // TODO: Catch error and return message to user
