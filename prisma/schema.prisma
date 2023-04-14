@@ -12,14 +12,14 @@ datasource db {
 
 model MultipleChoiceQuestion {
   id Int @id @default(autoincrement())
-  question String?
+  question String 
   MultipleChoiceAnswer MultipleChoiceAnswer[]
 }
 
 model MultipleChoiceAnswer {
   id Int @id @default(autoincrement())
-  question_id Int?
-  answer String?
-  is_correct Int?
-  MultipleChoiceQuestion MultipleChoiceQuestion? @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  question_id Int
+  answer String
+  is_correct Int
+  MultipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

@@ -1,3 +1,5 @@
+import type { MultipleChoiceAnswer } from "@prisma/client";
+
 export enum FileType {
   PDF,
 }
@@ -27,3 +29,9 @@ export class MultipleChoice {
     this.answers = answers;
   }
 }
+
+export type Question = {
+  id: number;
+  question: string;
+  answers: Array<MultipleChoiceAnswer>;
+};

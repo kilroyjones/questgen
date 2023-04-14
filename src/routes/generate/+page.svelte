@@ -124,4 +124,5 @@
       <button class="btn" on:click={generate}> Generate </button>
     {/if}
   </div>
+  <div class="w-full md:w-1/4" />
 </div>
