@@ -13,7 +13,10 @@ datasource db {
 model MultipleChoiceQuestion {
   id Int @id @default(autoincrement())
   question String 
-  MultipleChoiceAnswer MultipleChoiceAnswer[]
+  collectionId Int
+  collection Collection @relation(fields: [collectionId], references: [id])
+  answers MultipleChoiceAnswer[]
+  Tag Tag[]
 }
 
 model MultipleChoiceAnswer {
@@ -22,4 +25,17 @@ model MultipleChoiceAnswer {
   answer String
   is_correct Int
   MultipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+  question_id Int
+  tag String
+  MultipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Collection {
+  id Int @id @default(autoincrement())
+  name String
+  questions MultipleChoiceQuestion [] 
 }
