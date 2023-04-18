@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url = env("DATABASE_URL")
 }
 
@@ -15,23 +15,26 @@ model MultipleChoiceQuestion {
   question String 
   collectionId Int
   collection Collection @relation(fields: [collectionId], references: [id])
+  isDeleted Boolean 
   answers MultipleChoiceAnswer[]
-  Tag Tag[]
+  tags Tag[]
 }
 
 model MultipleChoiceAnswer {
   id Int @id @default(autoincrement())
-  question_id Int
+  questionId Int
   answer String
-  is_correct Int
-  MultipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  isCorrect Boolean 
+  multipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Tag {
   id Int @id @default(autoincrement())
-  question_id Int
-  tag String
-  MultipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  // question_id Int
+  tag String 
+  multipleChoiceQuestions MultipleChoiceQuestion[] 
+  // MultipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
 }
 
 model Collection {
