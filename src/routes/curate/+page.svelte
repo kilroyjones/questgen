@@ -1,15 +1,13 @@
 <script lang="ts">
-  import Answer from "./components/Answer.svelte";
   import type { Question } from "$lib/models";
-
-  import type { MultipleChoiceAnswer, MultipleChoiceQuestion } from "@prisma/client";
+  import Answer from "./components/Answer.svelte";
   import { onMount } from "svelte";
 
   let question: Question | null = null;
   let removedAnswers: Array<number> = [];
 
   async function getQuestion() {
-    let resp = await fetch("http://localhost:5173/api/get-question", {
+    let resp = await fetch("http://localhost:5173/api/question/get", {
       method: "POST",
       body: JSON.stringify({}),
       headers: {
@@ -17,8 +15,8 @@
       },
     });
 
+    console.log();
     question = await resp.json();
-    console.log(question);
   }
 
   async function removeAnswer(id: number) {
@@ -32,18 +30,37 @@
     removedAnswers = removedAnswers;
   }
 
-  async function changeAnswer(id: number) {
-    question;
+  async function removeQuestion() {
+    if (question) {
+      let resp = await fetch("http://localhost:5173/api/question/delete", {
+        method: "DELETE",
+        body: JSON.stringify({ id: question.id }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      let result = await resp.json();
+      if (result.status == "success") {
+        getQuestion();
+      } else {
+        // TODO: Display error
+        console.log(result.status);
+      }
+    } else {
+      // TODO: Handle error here
+    }
   }
+
+  async function changeAnswer(id: number) {}
 
   onMount(async () => {
     getQuestion();
   });
 </script>
 
-<div class="flex">
+<div class="flex mb-0 mt-8">
   <div class="w-full md:w-1/4" />
-  <div class="w-full md:w-1/2 lg:w-5/12 p-8">
+  <div class="w-full md:w-1/2 lg:w-5/12">
     {#if question}
       <input class="input input-bordered w-full mb-5" value={question.question} />
       <div class="flex flex-col">
@@ -55,6 +72,16 @@
           {/if}
         {/each}
       </div>
+    {/if}
+  </div>
+  <div class="w-full md:w-1/4" />
+</div>
+
+<div class="flex">
+  <div class="w-full md:w-1/4" />
+  <div class="w-full md:w-1/2 lg:w-5/12">
+    {#if question}
+      <button class="btn" on:click={removeQuestion}>DELETE</button>
     {/if}
   </div>
   <div class="w-full md:w-1/4" />

@@ -6,6 +6,7 @@
     <ul class="menu menu-horizontal px-1">
       <li><a href="/generate">Generate</a></li>
       <li><a href="/curate">Curate</a></li>
+      <li><a href="/collections">Collections</a></li>
     </ul>
   </div>
 </div>

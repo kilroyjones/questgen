@@ -1,5 +1,5 @@
 let content = `
-1. What is a variable in computer science?
+What is a variable in computer science?
 a) Words that mean other stuff
 b) A type of computer program
 c) A type of computer hardware
@@ -12,6 +12,7 @@ c) To run a program
 d) To store information temporarily for quick access
 
 3. What is the syntax for declaring a variable in most programming languages?
+
 a) VariableName = Value
 b) Value = VariableName
 c) VariableName : Value
@@ -48,31 +49,85 @@ c) Local variables are declared after global variables
 d) There is no difference between a global and a local variable
 `;
 
+let content2 = `1. Which number system is used by computers to represent data?
+a) Binary
+b) Denary
+c) Hexadecimal
+d) Both a and b
+
+What are the basic building blocks of all computers?
+a) Binary number system
+b) Denary number system
+c) Hexadecimal number system
+d) None of the above
+
+3. What is the purpose of converting data into binary format?
+a) So that it can be processed by computers
+b) To make it easier for humans to read and understand
+c) To save storage space
+d) None of the above
+
+4. How are switches represented in the binary number system?
+a) ON position: 1, OFF position: 0
+b) ON position: 0, OFF position: 1
+c) Both ON and OFF positions are represented by 1
+d) Both ON and OFF positions are represented by 0
+
+5. Which of the following number systems is NOT used by computers?
+a) Binary
+b) Denary
+c) Octal
+d) Hexadecimal
+
+6. What is the purpose of using hexadecimal for data representation?
+6. What is the purpose of using hexadecimal for data representation?
+6. What is the purpose of using hexadecimal for data representation?
+6. What is the purpose of using hexadecimal for data representation?
+6. What is the purpose of using hexadecimal for data representation?
+a) It allows for more compact representation of numbers compared to binary
+
+7. What is overflow in binary addition?
+a) When the result of an addition exceeds the number of bits allocated for it
+b) When the result of an addition is negative
+c) When the result of an addition is zero
+d) None of the above
+a) To represent both positive and negative binary numbers
+b) To convert decimal numbers into binary
+c) To perform logical binary shifts
+d) None of the above
+`;
+
 // class MultipeChoice {
 //   question: string;
 //   answers: Array<string>;
 // }
 
-let lines = content.split("\n");
-console.log(lines);
+let lines = content2.split("\n");
 
 let questions = [];
-let q = [];
-let questionRegex = /\d+. (.*)/;
-let answerRegex = /\w\) (.*)/;
+let currentQuestion = [];
+let answerRegex = /([A-Za-z][.)]) (.+)/;
+let questionRegex = /^\d+[.)]/;
+
 for (let i = 0; i < lines.length; i++) {
   let line = lines[i].replace(/(\r\n|\n|\r)/gm, "");
-  let question = line.match(questionRegex);
-  if (question) {
-    if (q.length > 0) {
-      questions.push(q);
+  let result = line.match(answerRegex);
+  if (result) {
+    if (currentQuestion.length > 0) {
+      currentQuestion.push(result[2]);
     }
-    q = [question[1]];
-  }
-  let answer = line.match(answerRegex);
-  if (answer) {
-    q.push(answer[1]);
+  } else if (line.length > 3) {
+    if (currentQuestion.length > 1) {
+      questions.push(currentQuestion);
+    }
+
+    if (line.match(questionRegex)) {
+      line = line.substring(line.indexOf(" ") + 1);
+    }
+    currentQuestion = [line];
   }
 }
-
+if (currentQuestion.length > 0) {
+  questions.push(currentQuestion);
+}
 console.log(questions);

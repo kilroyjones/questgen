@@ -20,8 +20,8 @@
       await stagedFiles.map(async (file: FileData) => {
         for (let i = 0; i < file.content.length; i = i + maxContentLength) {
           console.log(i);
-          console.log($collectionName) 
-          let resp = await fetch("http://localhost:5173/api/query-gpt", {
+          console.log($collectionName);
+          let resp = await fetch("http://localhost:5173/api/question/create", {
             method: "POST",
             body: JSON.stringify({
               collectionName: $collectionName,

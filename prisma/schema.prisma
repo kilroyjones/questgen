@@ -30,15 +30,14 @@ model MultipleChoiceAnswer {
 
 model Tag {
   id Int @id @default(autoincrement())
-  // question_id Int
   tag String 
   multipleChoiceQuestions MultipleChoiceQuestion[] 
-  // MultipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
 }
 
 model Collection {
   id Int @id @default(autoincrement())
   name String
+  count Int // TODO: ELIMINATE THIS
   questions MultipleChoiceQuestion [] 
 }

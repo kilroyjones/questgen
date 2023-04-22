@@ -5,20 +5,21 @@ const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ request }) => {
   let data = await request.json();
-  let question = await prisma.multipleChoiceQuestion.findUnique({
+  let question = await prisma.multipleChoiceQuestion.findFirst({
     where: {
-      id: 1,
+      AND: [{ isDeleted: false }],
     },
     include: {
-      MultipleChoiceAnswer: true,
+      answers: true,
     },
   });
+  console.log(question);
   if (question) {
     return new Response(
       JSON.stringify({
         id: question.id,
         question: question.question,
-        answers: question.MultipleChoiceAnswer,
+        answers: question.answers,
       })
     );
   }
