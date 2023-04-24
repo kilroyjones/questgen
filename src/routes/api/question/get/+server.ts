@@ -13,7 +13,6 @@ export const POST: RequestHandler = async ({ request }) => {
       answers: true,
     },
   });
-  console.log(question);
   if (question) {
     return new Response(
       JSON.stringify({
