@@ -44,6 +44,7 @@ export const POST: RequestHandler = async ({ request }) => {
           question: question[0],
           collectionId: collection.id,
           isDeleted: false,
+          isApproved: false,
           answers: {
             create: answers,
           },

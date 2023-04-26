@@ -7,7 +7,7 @@ export const POST: RequestHandler = async ({ request }) => {
   let data = await request.json();
   let question = await prisma.multipleChoiceQuestion.findFirst({
     where: {
-      AND: [{ isDeleted: false }],
+      AND: [{ isDeleted: false }, { isApproved: false }],
     },
     include: {
       answers: true,

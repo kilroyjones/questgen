@@ -16,6 +16,7 @@ model MultipleChoiceQuestion {
   collectionId Int
   collection Collection @relation(fields: [collectionId], references: [id])
   isDeleted Boolean 
+  isApproved Boolean
   answers MultipleChoiceAnswer[]
   tags Tag[]
 }

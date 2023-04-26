@@ -84,6 +84,29 @@
     }
   }
 
+  async function approveQuestion() {
+    if (question) {
+      let resp = await fetch("http://localhost:5173/api/question/approve", {
+        method: "POST",
+        body: JSON.stringify(question),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      let result = await resp.json();
+      if (result.status == "success") {
+        // TODO: Add confirmation
+        console.log("approved");
+        getQuestion();
+      } else {
+        // TODO: Display error
+        console.log(result.status);
+      }
+    } else {
+      // TODO: Handle error here
+    }
+  }
+
   onMount(async () => {
     getQuestion();
   });
@@ -114,6 +137,7 @@
     {#if question}
       <button class="btn" on:click={removeQuestion}>DELETE</button>
       <button class="btn" on:click={updateQuestion}>UPDATE</button>
+      <button class="btn" on:click={approveQuestion}>APPROVE</button>
     {/if}
   </div>
   <div class="w-full md:w-1/4" />

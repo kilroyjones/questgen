@@ -5,7 +5,7 @@
   let collections: Array<any> | null = null;
 
   async function getCollections() {
-    let resp = await fetch("http://localhost:5173/api/collections/get", {
+    let resp = await fetch("http://localhost:5173/api/collections/browse", {
       method: "POST",
       body: JSON.stringify({}),
       headers: {
@@ -22,7 +22,7 @@
   });
 </script>
 
-<div class="flex">
+<div class="flex flex-wrap">
   <div class="w-full md:w-1/5" />
   <div class="w-full md:w-3/5 lg:w-5/12 p-8">
     Collections
@@ -34,7 +34,8 @@
           </figure>
           <div class="card-body p-4">
             <h2 class="card-title">
-              {collection.name}
+              <!-- TODO: Change this to work with account ID if need be -->
+              <a href="/collections/{collection.id}">{collection.name}</a>
             </h2>
             <p class="text-sm mb-2">Questions: {collection.count}</p>
             <div class="card-actions">

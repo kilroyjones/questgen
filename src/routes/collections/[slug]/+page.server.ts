@@ -1,22 +1,22 @@
-import type { RequestHandler } from "./$types";
+import { error } from "@sveltejs/kit";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const POST: RequestHandler = async ({ request }) => {
-  let req = await request.json();
+/** @type {import('./$types').PageServerLoad} */
+export async function load({ params }) {
+  console.log(params);
+
   // Assume getting all collections
   // TODO: Add handle for getting a specific collection?
   let collection = await prisma.collection.findUnique({
     where: {
-      id: req.id,
+      id: parseInt(params.slug),
     },
     include: {
       questions: true,
     },
   });
   console.log(collection);
-  return new Response(JSON.stringify({ status: "success" }));
-  // TODO: Handle error
-  // return new Response("ERROR");
-};
+  return collection;
+}
