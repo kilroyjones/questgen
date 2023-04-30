@@ -112,11 +112,20 @@
   });
 </script>
 
-<div class="flex mb-0 mt-8">
+<div class="flex mb-3 mt-10">
   <div class="w-full md:w-1/4" />
   <div class="w-full md:w-1/2 lg:w-5/12">
     {#if question}
-      <textarea class="text-area w-full mb-5" bind:value={question.question} />
+      <div class="card mb-6">
+        <div class="flex">
+          <div class="flex-1 w-full h-full text-sm">
+            <textarea
+              class="textarea h-full w-full border-2 border-gray-400 mb-5"
+              bind:value={question.question}
+            />
+          </div>
+        </div>
+      </div>
       <div class="flex flex-col">
         {#each question.answers as answer}
           {#if removedAnswers.includes(answer.id) == true}
@@ -133,11 +142,15 @@
 
 <div class="flex">
   <div class="w-full md:w-1/4" />
-  <div class="w-full md:w-1/2 lg:w-5/12">
+  <div class="flex justify-between items-center w-full md:w-1/2 lg:w-5/12">
     {#if question}
-      <button class="btn" on:click={removeQuestion}>DELETE</button>
-      <button class="btn" on:click={updateQuestion}>UPDATE</button>
-      <button class="btn" on:click={approveQuestion}>APPROVE</button>
+      <div>
+        <button class="btn" on:click={removeQuestion}>DELETE</button>
+      </div>
+      <div class="ml-auto">
+        <button class="btn align-right" on:click={updateQuestion}>UPDATE</button>
+        <button class="btn" on:click={approveQuestion}>APPROVE</button>
+      </div>
     {/if}
   </div>
   <div class="w-full md:w-1/4" />

@@ -1,7 +1,9 @@
 <script lang="ts">
+  import type { Collection } from "@prisma/client";
+
   export let data;
 
-  let collection = data;
+  let collection: any = data;
   console.log(data);
 </script>
 

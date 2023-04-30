@@ -17,6 +17,7 @@ export async function load({ params }) {
       questions: true,
     },
   });
+
   console.log(collection);
   return collection;
 }

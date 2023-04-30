@@ -66,9 +66,9 @@
   }
 </script>
 
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mt-10">
   <div class="w-full md:w-1/4" />
-  <div class="w-full md:w-1/2 lg:w-5/12 p-8">
+  <div class="w-full md:w-1/2 lg:w-5/12">
     <Dropzone
       accept={undefined}
       disabled={false}
