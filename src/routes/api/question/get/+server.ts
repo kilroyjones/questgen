@@ -14,13 +14,7 @@ export const POST: RequestHandler = async ({ request }) => {
     },
   });
   if (question) {
-    return new Response(
-      JSON.stringify({
-        id: question.id,
-        question: question.question,
-        answers: question.answers,
-      })
-    );
+    return new Response(JSON.stringify(question));
   }
 
   // TODO: Handle error

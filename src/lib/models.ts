@@ -35,3 +35,10 @@ export type Question = {
   question: string;
   answers: Array<MultipleChoiceAnswer>;
 };
+
+export enum QuestionStatus {
+  ALL,
+  APPROVED,
+  UNAPPROVED,
+  DELETED,
+}

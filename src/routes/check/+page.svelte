@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { Question } from "$lib/models";
-  import type { MultipleChoiceAnswer } from "@prisma/client";
+  import type { MultipleChoiceAnswer, MultipleChoiceQuestion } from "@prisma/client";
   import Answer from "./components/Answer.svelte";
   import { onMount } from "svelte";
 
-  let question: Question | null = null;
+  let question: MultipleChoiceQuestion | null = null;
   let removedAnswers: Array<number> = [];
 
   async function getQuestion() {
@@ -107,6 +107,17 @@
     }
   }
 
+  function getStatus() {
+    if (question) {
+      if (question.isApproved) {
+        return "Approved";
+      } else if (question.isDeleted) {
+        return "Deleted";
+      } else {
+        return "Not approved";
+      }
+    }
+  }
   onMount(async () => {
     getQuestion();
   });
@@ -116,16 +127,17 @@
   <div class="w-full md:w-1/4" />
   <div class="w-full md:w-1/2 lg:w-5/12">
     {#if question}
-      <div class="card mb-6">
+      <div class="card">
         <div class="flex">
           <div class="flex-1 w-full h-full text-sm">
             <textarea
-              class="textarea h-full w-full border-2 border-gray-400 mb-5"
+              class="textarea h-full w-full border-2 border-gray-400"
               bind:value={question.question}
             />
           </div>
         </div>
       </div>
+      <div class="flex mb-6">{question.isApproved}</div>
       <div class="flex flex-col">
         {#each question.answers as answer}
           {#if removedAnswers.includes(answer.id) == true}

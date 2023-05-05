@@ -18,7 +18,6 @@ model MultipleChoiceQuestion {
   isDeleted Boolean 
   isApproved Boolean
   answers MultipleChoiceAnswer[]
-  tags Tag[]
 }
 
 model MultipleChoiceAnswer {
@@ -32,8 +31,7 @@ model MultipleChoiceAnswer {
 model Tag {
   id Int @id @default(autoincrement())
   tag String 
-  multipleChoiceQuestions MultipleChoiceQuestion[] 
-
+  Collection Collection[] 
 }
 
 model Collection {
@@ -41,4 +39,5 @@ model Collection {
   name String
   count Int // TODO: ELIMINATE THIS
   questions MultipleChoiceQuestion [] 
+  tags Tag[]
 }
