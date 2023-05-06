@@ -11,6 +11,7 @@ export const DELETE: RequestHandler = async ({ request }) => {
       id: data.id,
     },
     data: {
+      isApproved: false,
       isDeleted: true,
     },
   });

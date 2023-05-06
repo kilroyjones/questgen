@@ -5,14 +5,27 @@ const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ request }) => {
   let data = await request.json();
+  let filter = data.filterOn;
+  let filters: Array<object> = [];
+  console.log(filter);
+  if (filter == "Approved") {
+    filters.push({ isApproved: true });
+  } else if (filter == "Not approved") {
+    filters.push({ isApproved: false });
+  } else if (filter == "Deleted") {
+    filters.push({ isDeleted: true });
+  }
+
+  console.log(filters);
   let question = await prisma.multipleChoiceQuestion.findFirst({
     where: {
-      AND: [{ isDeleted: false }, { isApproved: false }],
+      OR: filters,
     },
     include: {
       answers: true,
     },
   });
+  console.log(question);
   if (question) {
     return new Response(JSON.stringify(question));
   }
