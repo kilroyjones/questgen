@@ -15,6 +15,7 @@
 
     collections = await resp.json();
     console.log(collections);
+    console.log(collections);
   }
 
   onMount(async () => {
@@ -24,14 +25,10 @@
 
 <div class="flex flex-wrap">
   <div class="w-full md:w-1/5" />
-  <div class="w-full md:w-3/5 lg:w-5/12 p-8">
-    Collections
+  <div class="w-full md:w-3/5 lg:w-5/12">
     {#if collections}
       {#each collections as collection}
-        <div class="card w-52 bg-base-100 shadow-xl">
-          <figure>
-            <img src="https://placehold.co/600x400" class="object-cover" alt={collection.name} />
-          </figure>
+        <div class="card bg-base-100 shadow-xl hover:bg-gray-100 cursor-pointer mb-3">
           <div class="card-body p-4">
             <h2 class="card-title">
               <!-- TODO: Change this to work with account ID if need be -->
@@ -39,8 +36,9 @@
             </h2>
             <p class="text-sm mb-2">Questions: {collection.count}</p>
             <div class="card-actions">
-              <div class="badge badge-primary">Tag 1</div>
-              <div class="badge badge-primary">Tag 2</div>
+              {#each collection.tags as tag}
+                <div class="badge badge-primary">{tag.tag}</div>
+              {/each}
             </div>
           </div>
         </div>
