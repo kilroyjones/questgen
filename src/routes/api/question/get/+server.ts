@@ -7,7 +7,7 @@ export const POST: RequestHandler = async ({ request }) => {
   let data = await request.json();
   let filter = data.filterOn;
   let filters: Array<object> = [];
-  console.log(filter);
+  console.log(filter, data.collectionId);
   if (filter == "Approved") {
     filters.push({ isApproved: true });
   } else if (filter == "Not approved") {
@@ -19,7 +19,8 @@ export const POST: RequestHandler = async ({ request }) => {
   console.log(filters);
   let question = await prisma.multipleChoiceQuestion.findFirst({
     where: {
-      OR: filters,
+      // OR: filters,
+      collectionId: data.collectionId,
     },
     include: {
       answers: true,
