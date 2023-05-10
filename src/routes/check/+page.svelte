@@ -1,85 +1,25 @@
 <script lang="ts">
-  import type { Question } from "$lib/models";
-  import type { MultipleChoiceAnswer, MultipleChoiceQuestion } from "@prisma/client";
+  import type { MultipleChoiceAnswer, Prisma } from "@prisma/client";
+  import { approveQuestion, deleteQuestion, getQuestion } from "./api-calls/questions";
+  import { getCollectionList } from "./api-calls/collections";
   import Answer from "./components/Answer.svelte";
   import { onMount } from "svelte";
+  import type { MultipleChoiceQuestionWithAnswers } from "$lib/models";
 
-  let question: MultipleChoiceQuestion | null = null;
+  let question: MultipleChoiceQuestionWithAnswers | null = null;
   let removedAnswers: Array<number> = [];
-  let filterOn: string;
-  let collections: Array<any> | null = null;
-  let selectedCollection: number;
-  let collectionBind: string;
+  let questionStatusFilter: string;
+  let collectionList: Array<any> | null = null;
+  let collectionId: number;
+  let collectionName: string;
 
-  async function getQuestion() {
-    console.log(filterOn, selectedCollection);
-    let resp = await fetch("http://localhost:5173/api/question/get", {
-      method: "POST",
-      body: JSON.stringify({
-        filterOn: filterOn,
-        collectionId: selectedCollection,
-      }),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-
-    console.log(resp);
-    question = await resp.json();
-  }
-
-  async function removeAnswer(id: number) {
-    let idx = removedAnswers.indexOf(id);
-    console.log(idx, removedAnswers);
-    if (idx > -1) {
-      removedAnswers.splice(idx, 1);
-    } else {
-      removedAnswers.push(id);
-    }
-    removedAnswers = removedAnswers;
-  }
-
-  async function removeQuestion() {
-    if (question) {
-      let resp = await fetch("http://localhost:5173/api/question/delete", {
-        method: "DELETE",
-        body: JSON.stringify({ id: question.id }),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-      let result = await resp.json();
-      if (result.status == "success") {
-        getQuestion();
-      } else {
-        // TODO: Display error
-        console.log(result.status);
-      }
-    } else {
-      // TODO: Handle error here
-    }
-  }
-
-  async function updateQuestion() {
-    if (question) {
-      let resp = await fetch("http://localhost:5173/api/question/update", {
-        method: "POST",
-        body: JSON.stringify(question),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-      let result = await resp.json();
-      if (result.status == "success") {
-        // TODO: Add confirmation
-        console.log("updated");
-      } else {
-        // TODO: Display error
-        console.log(result.status);
-      }
-    } else {
-      // TODO: Handle error here
-    }
+  enum Action {
+    ApproveQuestion,
+    ChangeCollection,
+    DeleteQuestion,
+    GetCollectionList,
+    GetQuestion,
+    UpdateQuestion,
   }
 
   async function updateAnswer(answer: MultipleChoiceAnswer) {
@@ -89,29 +29,6 @@
           currentAnswer = answer;
         }
       });
-    }
-  }
-
-  async function approveQuestion() {
-    if (question) {
-      let resp = await fetch("http://localhost:5173/api/question/approve", {
-        method: "POST",
-        body: JSON.stringify(question),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-      let result = await resp.json();
-      if (result.status == "success") {
-        // TODO: Add confirmation
-        console.log("approved");
-        getQuestion();
-      } else {
-        // TODO: Display error
-        console.log(result.status);
-      }
-    } else {
-      // TODO: Handle error here
     }
   }
 
@@ -128,59 +45,90 @@
     }
   }
 
-  async function getCollections() {
-    let resp = await fetch("http://localhost:5173/api/collections/browse", {
-      method: "POST",
-      body: JSON.stringify({}),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
+  async function removeAnswer(id: number) {
+    let idx = removedAnswers.indexOf(id);
+    console.log(idx, removedAnswers);
+    if (idx > -1) {
+      removedAnswers.splice(idx, 1);
+    } else {
+      removedAnswers.push(id);
+    }
+    removedAnswers = removedAnswers;
+  }
 
-    // TODO: Error handling
-    return await resp.json();
+  async function update(action: Action) {
+    console.log(action);
+    // TODO: Handle Errors
+    switch (action) {
+      case Action.ApproveQuestion:
+        if (question) {
+          let resp = await approveQuestion(question);
+        }
+        break;
+
+      case Action.ChangeCollection:
+        if (collectionList) {
+          collectionId = collectionList.find(o => o.name === collectionName).id;
+          update(Action.GetQuestion);
+        }
+        break;
+
+      case Action.DeleteQuestion:
+        if (question) {
+          let resp = await deleteQuestion(question);
+          update(Action.GetQuestion);
+        }
+        break;
+
+      case Action.GetCollectionList:
+        // TODO: Fix this ugly crap
+        {
+          let resp = await getCollectionList();
+          collectionList = await resp.json();
+          if (collectionList && collectionList.length > 1) {
+            collectionId = collectionList[1].id;
+            update(Action.GetQuestion);
+          }
+        }
+        break;
+
+      case Action.GetQuestion:
+        let resp = await getQuestion(questionStatusFilter, collectionId);
+        question = await resp.json();
+        break;
+
+      case Action.DeleteQuestion:
+        if (question) {
+          let resp = await deleteQuestion(question);
+          update(Action.GetQuestion);
+        }
+        break;
+    }
   }
 
   onMount(async () => {
-    collections = await getCollections();
-    console.log(collections);
-
-    if (collections) {
-      if (collections.length > 1) {
-        selectedCollection = collections[1].id;
-        console.log(selectedCollection);
-        getQuestion();
-      }
-    }
+    update(Action.GetCollectionList);
   });
-
-  async function changeCollection(e: Event) {
-    console.log("EVENT", e);
-    if (collections) {
-      selectedCollection = collections.find(o => o.name === collectionBind).id;
-      getQuestion();
-    }
-  }
 </script>
 
-{#if collections}
+{#if collectionList}
   <div class="flex mb-3 mt-10">
     <div class="w-full md:w-1/4" />
     <div class="w-full md:w-1/2 lg:w-5/12">
-      <div class="flex flex-col mb-2">
+      <div class="flex flex-row mb-2">
         <select
-          class="select w-full max-w-xs border-2 border-gray-400"
-          bind:value={collectionBind}
-          on:change={changeCollection}
+          class="select max-w-xs w-full border-2 border-gray-400"
+          bind:value={collectionName}
+          on:change={() => update(Action.ChangeCollection)}
         >
-          {#each collections as collection}
+          {#each collectionList as collection}
             <option id={collection.id}>{collection.name}</option>
           {/each}
         </select>
         <select
-          class="select w-full max-w-xs border-2 border-gray-400"
-          bind:value={filterOn}
-          on:change={getQuestion}
+          class="select max-w-xs mx-auto border-2 border-gray-400"
+          bind:value={questionStatusFilter}
+          on:change={() => update(Action.GetQuestion)}
         >
           <option>Not approved</option>
           <option selected>Approved</option>
@@ -215,17 +163,18 @@
     </div>
     <div class="w-full md:w-1/4" />
   </div>
-
   {#if question}
     <div class="flex">
       <div class="w-full md:w-1/4" />
       <div class="flex justify-between items-center w-full md:w-1/2 lg:w-5/12">
         <div>
-          <button class="btn" on:click={removeQuestion}>DELETE</button>
+          <button class="btn" on:click={() => update(Action.DeleteQuestion)}>DELETE</button>
         </div>
         <div class="ml-auto">
-          <button class="btn align-right" on:click={updateQuestion}>UPDATE</button>
-          <button class="btn" on:click={approveQuestion}>APPROVE</button>
+          <button class="btn align-right" on:click={() => update(Action.UpdateQuestion)}
+            >UPDATE</button
+          >
+          <button class="btn" on:click={() => update(Action.ApproveQuestion)}>APPROVE</button>
         </div>
       </div>
       <div class="w-full md:w-1/4" />

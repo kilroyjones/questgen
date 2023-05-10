@@ -1,4 +1,5 @@
 import type { MultipleChoiceAnswer } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 export enum FileType {
   PDF,
@@ -41,4 +42,17 @@ export enum QuestionStatus {
   APPROVED,
   UNAPPROVED,
   DELETED,
+}
+
+export type MultipleChoiceQuestionWithAnswers = Prisma.MultipleChoiceQuestionGetPayload<{
+  include: { answers: true };
+}>;
+
+export enum Action {
+  ApproveQuestion,
+  ChangeCollection,
+  DeleteQuestion,
+  GetCollectionList,
+  GetQuestion,
+  UpdateQuestion,
 }
