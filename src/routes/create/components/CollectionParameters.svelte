@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { collectionName } from "../modules/store";
+  import { collectionName } from "../modules/state";
 </script>
 
 <div class="flex-1">

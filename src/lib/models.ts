@@ -48,6 +48,10 @@ export type MultipleChoiceQuestionWithAnswers = Prisma.MultipleChoiceQuestionGet
   include: { answers: true };
 }>;
 
+export type CollectionsWithTags = Prisma.CollectionGetPayload<{
+  include: { tags: true };
+}>;
+
 export enum Action {
   ApproveQuestion,
   ChangeCollection,

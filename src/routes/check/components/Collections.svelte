@@ -1,29 +1,47 @@
 <script lang="ts">
-  import { Action } from "$lib/models";
-  export let collectionName: string;
-  export let collectionList: Array<any>;
-  export let questionStatusFilter: string;
-  export let update: Function;
+  import type { CollectionsWithTags } from "$lib/models";
+  import { getCollections } from "../api-calls/collections";
+  import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  let collections: Array<CollectionsWithTags>;
+  let collectionName: string;
+
+  async function changeCollection() {
+    if (collections) {
+      let collection = collections.find((o) => o.name === collectionName);
+      if (collection) {
+        dispatch("message", {
+          op: "changeCollection",
+          data: {
+            collectionId: collection.id,
+          },
+        });
+      }
+    }
+  }
+
+  onMount(async () => {
+    let resp = await getCollections();
+    console.log(resp);
+    if (resp) {
+      collections = await resp.json();
+    } else {
+      // TODO: Handle error
+    }
+  });
 </script>
 
-<div class="flex flex-row mb-2">
+{#if collections}
   <select
-    class="select max-w-xs w-full border-2 border-gray-400"
+    class="select w-full border-2 border-gray-400"
     bind:value={collectionName}
-    on:change={() => update(Action.ChangeCollection)}
+    on:change={() => changeCollection()}
   >
-    {#each collectionList as collection}
-      <option id={collection.id}>{collection.name}</option>
+    {#each collections as collection}
+      <option>{collection.name}</option>
     {/each}
   </select>
-  <select
-    class="select max-w-xs mx-auto border-2 border-gray-400"
-    bind:value={questionStatusFilter}
-    on:change={() => update(Action.GetQuestion)}
-  >
-    <option>Not approved</option>
-    <option selected>Approved</option>
-    <option>Deleted</option>
-    <option>All</option>
-  </select>
-</div>
+{/if}

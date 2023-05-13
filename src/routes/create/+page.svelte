@@ -5,7 +5,7 @@
   import SourceDetails from "./components/SourceDetails.svelte";
   import Tags from "./components/Tags.svelte";
   import CollectionParameters from "./components/CollectionParameters.svelte";
-  import { tags, collectionName } from "./modules/store";
+  import { tags, collectionName } from "./modules/state";
 
   import type { FileData } from "$lib/models";
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tags } from "../modules/store";
+  import { tags } from "../modules/state";
 
   // let $tags: Array<string> = [];
   let currentTag: string = "";
