@@ -1,12 +1,31 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import type { MultipleChoiceAnswer } from "@prisma/client";
   import FiTrash from "svelte-icons-pack/fi/FiTrash";
   import Icon from "svelte-icons-pack/Icon.svelte";
 
   export let answer: MultipleChoiceAnswer;
-  export let removeAnswer: Function;
-  export let updateAnswer: Function;
   export let disabled: boolean;
+
+  const dispatch = createEventDispatcher();
+
+  async function updateAnswer() {
+    dispatch("message", {
+      op: "updateAnswer",
+      data: {
+        answer: answer,
+      },
+    });
+  }
+
+  async function removeAnswer() {
+    dispatch("message", {
+      op: "removeAnswer",
+      data: {
+        id: answer.id,
+      },
+    });
+  }
 </script>
 
 <div class="card mb-4">
@@ -43,7 +62,7 @@
           />
           <button
             class="btn btn-xs text-xs mt-auto mb-1 bg-error border-none hover:bg-error text-white"
-            on:click={() => removeAnswer(answer.id)}
+            on:click={removeAnswer}
           >
             <Icon src={FiTrash} />
           </button>
@@ -55,8 +74,8 @@
           />
           <button
             class="btn btn-xs text-xs mt-auto bg-transparent border-1 border-gray-400 mb-1 hover:border-gray-400 hover:bg-gray-400 hover:text-white"
-            on:click={() => removeAnswer(answer.id)}
-            on:keydown={() => updateAnswer(answer)}
+            on:click={removeAnswer}
+            on:keydown={updateAnswer}
           >
             <Icon src={FiTrash} />
           </button>

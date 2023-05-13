@@ -1,52 +1,29 @@
 <script lang="ts">
-  import type { MultipleChoiceAnswer, Prisma } from "@prisma/client";
+  import type { MultipleChoiceAnswer } from "@prisma/client";
   import {
     approveQuestion,
     deleteQuestion,
     getQuestion,
     updateQuestion,
   } from "./api-calls/questions";
-  import Answer from "./components/Answer.svelte";
+  import Answers from "./components/Answers.svelte";
   import { onMount } from "svelte";
   import type { MultipleChoiceQuestionWithAnswers } from "$lib/models";
   import Collections from "./components/Collections.svelte";
   import CollectionsFilter from "./components/CollectionsFilter.svelte";
   import Actions from "./components/Actions.svelte";
+  import Question from "./components/Question.svelte";
 
   let question: MultipleChoiceQuestionWithAnswers | null = null;
-  let removedAnswers: Array<number> = [];
   let filter: string;
   let collectionId: number;
-
-  async function updateAnswer(answer: MultipleChoiceAnswer) {
-    if (question) {
-      question.answers.forEach(function (currentAnswer, index) {
-        if (currentAnswer.id == answer.id) {
-          currentAnswer = answer;
-        }
-      });
-    }
-  }
-
-  function getStatus() {
-    if (question) {
-      console.log(question.isApproved, question.isDeleted);
-      if (question.isApproved) {
-        return "Approved";
-      } else if (question.isDeleted) {
-        return "Deleted";
-      } else {
-        return "Not approved";
-      }
-    }
-  }
+  let removedAnswers: Array<number> = [];
 
   async function handleMessage(
     message: CustomEvent<{ op: string; data: any }>
   ) {
     let op = message.detail.op;
     let data = message.detail.data;
-    console.log(message, op, data);
 
     switch (op) {
       case "changeCollection":
@@ -56,11 +33,35 @@
 
       case "changeFilter":
         filter = data.filter;
-        console.log(filter);
         setupQuestion();
         break;
 
       // TODO: on each of these I need to handle errors
+      case "changeQuestion":
+        if (question) {
+          question.question = data.question;
+        }
+        break;
+
+      case "updateAnswer":
+        if (question) {
+          question.answers.forEach(function (currentAnswer, index) {
+            if (currentAnswer.id == data.answer.id) {
+              currentAnswer = data.answer;
+            }
+          });
+        }
+        break;
+
+      case "removeAnswer":
+        if (!removedAnswers.includes(data.id)) {
+          removedAnswers.push(data.id);
+          removedAnswers = removedAnswers;
+        } else {
+          removedAnswers = removedAnswers.filter((id) => id != data.id);
+        }
+        break;
+
       case "deleteQuestion":
         if (question) {
           await deleteQuestion(question);
@@ -81,17 +82,6 @@
           setupQuestion();
         }
     }
-  }
-
-  async function removeAnswer(id: number) {
-    let idx = removedAnswers.indexOf(id);
-    console.log(idx, removedAnswers);
-    if (idx > -1) {
-      removedAnswers.splice(idx, 1);
-    } else {
-      removedAnswers.push(id);
-    }
-    removedAnswers = removedAnswers;
   }
 
   async function setupQuestion() {
@@ -120,24 +110,13 @@
           <CollectionsFilter on:message={handleMessage} />
         </div>
       </div>
-      <div class="card">
-        <div class="flex">
-          <div class="flex-1 w-full h-full text-sm">
-            <textarea
-              class="textarea h-full w-full border-2 border-gray-400"
-              bind:value={question.question}
-            />
-          </div>
-        </div>
-      </div>
+      <Question on:message={handleMessage} question={question.question} />
       <div class="flex flex-col">
-        {#each question.answers as answer}
-          {#if removedAnswers.includes(answer.id) == true}
-            <Answer {answer} {removeAnswer} {updateAnswer} disabled={true} />
-          {:else}
-            <Answer {answer} {removeAnswer} {updateAnswer} disabled={false} />
-          {/if}
-        {/each}
+        <Answers
+          on:message={handleMessage}
+          answers={question.answers}
+          {removedAnswers}
+        />
       </div>
     </div>
     <div class="w-full md:w-1/4" />
