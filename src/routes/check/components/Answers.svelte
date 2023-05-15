@@ -2,14 +2,26 @@
   import type { MultipleChoiceAnswer } from "@prisma/client";
   import Answer from "./Answer.svelte";
 
+  export let handleUpdateAnswer: Function;
+  export let handleRemoveAnswer: Function;
   export let answers: Array<MultipleChoiceAnswer>;
   export let removedAnswers: Array<number>;
 </script>
 
 {#each answers as answer}
   {#if removedAnswers.includes(answer.id) == true}
-    <Answer on:message {answer} disabled={true} />
+    <Answer
+      {handleUpdateAnswer}
+      {handleRemoveAnswer}
+      {answer}
+      disabled={true}
+    />
   {:else}
-    <Answer on:message {answer} disabled={false} />
+    <Answer
+      {handleUpdateAnswer}
+      {handleRemoveAnswer}
+      {answer}
+      disabled={false}
+    />
   {/if}
 {/each}

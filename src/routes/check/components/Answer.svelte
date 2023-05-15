@@ -4,6 +4,8 @@
   import FiTrash from "svelte-icons-pack/fi/FiTrash";
   import Icon from "svelte-icons-pack/Icon.svelte";
 
+  export let handleUpdateAnswer: Function;
+  export let handleRemoveAnswer: Function;
   export let answer: MultipleChoiceAnswer;
   export let disabled: boolean;
 

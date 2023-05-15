@@ -1,10 +1,9 @@
 <script lang="ts">
   import type { CollectionsWithTags } from "$lib/models";
-  import { getCollections } from "../api-calls/collections";
+  import { getCollections } from "../modules/api";
   import { onMount } from "svelte";
-  import { createEventDispatcher } from "svelte";
 
-  const dispatch = createEventDispatcher();
+  export let handleChangeCollection: Function;
 
   let collections: Array<CollectionsWithTags>;
   let collectionName: string;
@@ -13,12 +12,7 @@
     if (collections) {
       let collection = collections.find((o) => o.name === collectionName);
       if (collection) {
-        dispatch("message", {
-          op: "changeCollection",
-          data: {
-            collectionId: collection.id,
-          },
-        });
+        handleChangeCollection(collection.id);
       }
     }
   }

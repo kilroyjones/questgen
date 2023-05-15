@@ -1,5 +1,15 @@
 import type { MultipleChoiceQuestionWithAnswers } from "$lib/models";
 
+export async function getCollections() {
+  return await fetch("http://localhost:5173/api/collections/browse", {
+    method: "POST",
+    body: JSON.stringify({}),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+}
+
 export async function getQuestion(filters: string, collectionId: number) {
   return await fetch("http://localhost:5173/api/question/get", {
     method: "POST",

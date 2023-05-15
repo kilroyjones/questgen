@@ -1,86 +1,77 @@
 <script lang="ts">
-  import type { MultipleChoiceAnswer } from "@prisma/client";
+  import Answers from "./components/Answers.svelte";
   import {
     approveQuestion,
     deleteQuestion,
     getQuestion,
     updateQuestion,
-  } from "./api-calls/questions";
-  import Answers from "./components/Answers.svelte";
+  } from "./modules/api";
   import { onMount } from "svelte";
   import type { MultipleChoiceQuestionWithAnswers } from "$lib/models";
   import Collections from "./components/Collections.svelte";
   import CollectionsFilter from "./components/CollectionsFilter.svelte";
   import Actions from "./components/Actions.svelte";
   import Question from "./components/Question.svelte";
+  import type { MultipleChoiceAnswer } from "@prisma/client";
 
   let question: MultipleChoiceQuestionWithAnswers | null = null;
   let filter: string;
   let collectionId: number;
   let removedAnswers: Array<number> = [];
 
-  async function handleMessage(
-    message: CustomEvent<{ op: string; data: any }>
-  ) {
-    let op = message.detail.op;
-    let data = message.detail.data;
+  async function handleChangeCollection(newId: number) {
+    collectionId = newId;
+    setupQuestion();
+  }
 
-    switch (op) {
-      case "changeCollection":
-        collectionId = data.collectionId;
-        setupQuestion();
-        break;
+  async function handleChangeFilter(newFilter: string) {
+    filter = newFilter;
+    setupQuestion();
+  }
 
-      case "changeFilter":
-        filter = data.filter;
-        setupQuestion();
-        break;
-
-      // TODO: on each of these I need to handle errors
-      case "changeQuestion":
-        if (question) {
-          question.question = data.question;
+  async function handleUpdateAnswer(updatedAnswer: MultipleChoiceAnswer) {
+    if (question) {
+      question.answers.forEach(function (currentAnswer, index) {
+        if (currentAnswer.id == updatedAnswer.id) {
+          currentAnswer = updatedAnswer;
         }
-        break;
+      });
+    }
+  }
 
-      case "updateAnswer":
-        if (question) {
-          question.answers.forEach(function (currentAnswer, index) {
-            if (currentAnswer.id == data.answer.id) {
-              currentAnswer = data.answer;
-            }
-          });
-        }
-        break;
+  async function handleChangeQuestion(newQuestion: string) {
+    if (question) {
+      question.question = newQuestion;
+    }
+  }
 
-      case "removeAnswer":
-        if (!removedAnswers.includes(data.id)) {
-          removedAnswers.push(data.id);
-          removedAnswers = removedAnswers;
-        } else {
-          removedAnswers = removedAnswers.filter((id) => id != data.id);
-        }
-        break;
+  async function handleApproveQuestion() {
+    if (question) {
+      await approveQuestion(question);
+      setupQuestion();
+    }
+  }
 
-      case "deleteQuestion":
-        if (question) {
-          await deleteQuestion(question);
-          setupQuestion();
-        }
-        break;
+  async function handleDeleteQuestion() {
+    if (question) {
+      await deleteQuestion(question);
+      setupQuestion();
+    }
+  }
 
-      case "updateQuestion":
-        if (question) {
-          await updateQuestion(question);
-          setupQuestion();
-        }
-        break;
+  async function handleRemoveAnswer(removedId: number) {
+    if (!removedAnswers.includes(removedId)) {
+      removedAnswers.push(removedId);
+      removedAnswers = removedAnswers;
+    } else {
+      removedAnswers = removedAnswers.filter((id) => id != removedId);
+    }
+  }
 
-      case "approveQuestion":
-        if (question) {
-          await approveQuestion(question);
-          setupQuestion();
-        }
+  async function handleUpdateQuestion() {
+    if (question) {
+      await updateQuestion(question);
+      setupQuestion();
     }
   }
 
@@ -104,16 +95,17 @@
     <div class="w-full md:w-1/2 lg:w-5/12">
       <div class="flex flex-row gap-2 mb-2">
         <div class="flex-1">
-          <Collections on:message={handleMessage} />
+          <Collections {handleChangeCollection} />
         </div>
         <div class="flex-4">
-          <CollectionsFilter on:message={handleMessage} />
+          <CollectionsFilter {handleChangeFilter} />
         </div>
       </div>
-      <Question on:message={handleMessage} question={question.question} />
+      <Question {handleChangeQuestion} question={question.question} />
       <div class="flex flex-col">
         <Answers
-          on:message={handleMessage}
+          {handleUpdateAnswer}
+          {handleRemoveAnswer}
           answers={question.answers}
           {removedAnswers}
         />
@@ -121,5 +113,9 @@
     </div>
     <div class="w-full md:w-1/4" />
   </div>
-  <Actions on:message={handleMessage} />
+  <Actions
+    {handleApproveQuestion}
+    {handleDeleteQuestion}
+    {handleUpdateQuestion}
+  />
 {/if}
