@@ -19,5 +19,5 @@
   });
 </script>
 
-<Navbar />
-<slot />
+<Navbar {supabase} {session} />
+<div class="h-screen"><slot /></div>

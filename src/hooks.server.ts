@@ -4,9 +4,10 @@ import {
 } from "$env/static/public";
 import { createSupabaseServerClient } from "@supabase/auth-helpers-sveltekit";
 import type { Handle } from "@sveltejs/kit";
+import { redirect, error } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
-  event.locals.supabase = createSupabaseServerClient({
+  event.locals.supabase = await createSupabaseServerClient({
     supabaseUrl: PUBLIC_SUPABASE_URL,
     supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
     event,
@@ -21,6 +22,14 @@ export const handle: Handle = async ({ event, resolve }) => {
     } = await event.locals.supabase.auth.getSession();
     return session;
   };
+
+  console.log(event.locals);
+  if (!event.url.pathname.includes("/login")) {
+    const session = await event.locals.getSession();
+    if (!session) {
+      throw redirect(303, "/account/login");
+    }
+  }
 
   return resolve(event, {
     /**

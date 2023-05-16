@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
-  import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { Auth } from "@supabase/auth-ui-svelte";
+  import { ThemeSupa, supabase } from "@supabase/auth-ui-shared";
 
   export let data;
-  $: {
-    const redirectTo = $page.url.searchParams.get("redirect");
-
-    // check if user has been set in session store then redirect
-    if (browser && data.session) {
-      goto(redirectTo ?? "/");
-    }
-  }
 </script>
 
-<section>
-  "Because as we know, there are known knowns; there are things we know we know.
-  We also know there are known unknowns; that is to say we know there are some
-  things we do not know. But there are also unknown unknowns—the ones we don't
-  know we don't know" - Donald Rumsfeld
-</section>
+<div class="flex mb-3 mt-10 h-full">
+  <div class="w-full md:w-1/4" />
+  <div class="flex w-full md:w-1/2 lg:w-5/12 items-center justify-center">
+    <div>
+      {data.session?.user.email}
+      <Auth
+        supabaseClient={data.supabase}
+        additionalData={[]}
+        providers={["google"]}
+        appearance={{ theme: ThemeSupa }}
+      />
+    </div>
+  </div>
+  <div class="w-full md:w-1/4" />
+</div>

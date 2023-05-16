@@ -10,7 +10,7 @@
   import type { MultipleChoiceQuestionWithAnswers } from "$lib/models";
   import Collections from "./components/Collections.svelte";
   import CollectionsFilter from "./components/CollectionsFilter.svelte";
-  import Actions from "./components/Actions.svelte";
+  import Process from "./components/Process.svelte";
   import Question from "./components/Question.svelte";
   import type { MultipleChoiceAnswer } from "@prisma/client";
 
@@ -113,7 +113,7 @@
     </div>
     <div class="w-full md:w-1/4" />
   </div>
-  <Actions
+  <Process
     {handleApproveQuestion}
     {handleDeleteQuestion}
     {handleUpdateQuestion}
