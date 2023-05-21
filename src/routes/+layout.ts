@@ -6,7 +6,7 @@ import { createSupabaseLoadClient } from "@supabase/auth-helpers-sveltekit";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ fetch, data, depends }) => {
-  depends("supabase:auth");
+  // depends("supabase:auth");
 
   const supabase = createSupabaseLoadClient({
     supabaseUrl: PUBLIC_SUPABASE_URL,

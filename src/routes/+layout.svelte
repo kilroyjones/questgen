@@ -19,5 +19,9 @@
   });
 </script>
 
-<Navbar {supabase} {session} />
+{#if session}
+  <Navbar isLoggedIn={true} username={session.user.user_metadata.name} />
+{:else}
+  <Navbar />
+{/if}
 <div class="h-screen"><slot /></div>

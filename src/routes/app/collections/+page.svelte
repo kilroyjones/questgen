@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { MultipleChoiceAnswer, MultipleChoiceQuestion } from "@prisma/client";
   import { onMount } from "svelte";
 
   let collections: Array<any> | null = null;
@@ -15,7 +14,6 @@
 
     collections = await resp.json();
     console.log(collections);
-    console.log(collections);
   }
 
   onMount(async () => {
@@ -28,7 +26,9 @@
   <div class="w-full md:w-3/5 lg:w-5/12">
     {#if collections}
       {#each collections as collection}
-        <div class="card bg-base-100 shadow-xl hover:bg-gray-100 cursor-pointer mb-3">
+        <div
+          class="card bg-base-100 shadow-xl hover:bg-gray-100 cursor-pointer mb-3"
+        >
           <div class="card-body p-4">
             <h2 class="card-title">
               <!-- TODO: Change this to work with account ID if need be -->

@@ -29,7 +29,11 @@ export const POST: RequestHandler = async ({ request }) => {
     console.log(tags);
 
     //TODO: Create collection separately and then add questions to it
-    let collection = await getCollection(data.collectionName, tags);
+    let collection = await getCollection(
+      data.collectionName,
+      data.userId,
+      tags
+    );
     // let count = await prisma.collection.questions.count({
     //   where{ id: collection.}
     // })
@@ -41,6 +45,7 @@ export const POST: RequestHandler = async ({ request }) => {
       let answers = await parseAnswers(question);
       await prisma.multipleChoiceQuestion.create({
         data: {
+          createdBy: data.userId,
           question: question[0],
           collectionId: collection.id,
           isDeleted: false,
@@ -79,11 +84,15 @@ async function getAPIResult(content: string): Promise<any> {
 }
 
 // TODO: fix this so that a collection is being return?
-async function getCollection(collectionName: string, tags: Array<any>): Promise<any> {
+async function getCollection(
+  collectionName: string,
+  userId: string,
+  tags: Array<any>
+): Promise<any> {
   const collection = await prisma.collection.create({
     data: {
+      createdBy: userId,
       name: collectionName,
-      count: 9,
       tags: {
         create: tags,
       },

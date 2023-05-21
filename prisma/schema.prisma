@@ -12,6 +12,7 @@ datasource db {
 
 model MultipleChoiceQuestion {
   id Int @id @default(autoincrement())
+  createdBy String 
   question String 
   collectionId Int
   collection Collection @relation(fields: [collectionId], references: [id])
@@ -36,8 +37,8 @@ model Tag {
 
 model Collection {
   id Int @id @default(autoincrement())
+  createdBy String 
   name String
-  count Int // TODO: ELIMINATE THIS
   questions MultipleChoiceQuestion [] 
   tags Tag[]
 }

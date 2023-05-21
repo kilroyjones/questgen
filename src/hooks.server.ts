@@ -7,6 +7,7 @@ import type { Handle } from "@sveltejs/kit";
 import { redirect, error } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
+  console.log("HOOKS SERVER");
   event.locals.supabase = await createSupabaseServerClient({
     supabaseUrl: PUBLIC_SUPABASE_URL,
     supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
@@ -23,13 +24,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     return session;
   };
 
-  console.log(event.locals);
-  if (!event.url.pathname.includes("/login")) {
-    const session = await event.locals.getSession();
-    if (!session) {
-      throw redirect(303, "/account/login");
-    }
-  }
+  const session = await event.locals.getSession();
 
   return resolve(event, {
     /**

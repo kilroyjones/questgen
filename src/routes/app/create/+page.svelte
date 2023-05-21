@@ -6,8 +6,12 @@
   import Tags from "./components/Tags.svelte";
   import CollectionParameters from "./components/CollectionParameters.svelte";
   import { tags, collectionName } from "./modules/state";
+  import type { PageData } from "./$types";
 
   import type { FileData } from "$lib/models";
+
+  export let data: PageData;
+  console.log(data?.session?.user.id);
 
   let stagedFiles: Array<FileData> = [];
   let rejectFiles: Array<string> = [];
@@ -15,26 +19,33 @@
   let tokenTotal: number = 0;
 
   async function generate() {
+    // TODO: Fix this?
     let maxContentLength = 3000;
-    await Promise.all(
-      await stagedFiles.map(async (file: FileData) => {
-        for (let i = 0; i < file.content.length; i = i + maxContentLength) {
-          console.log(i);
-          console.log($collectionName);
-          let resp = await fetch("http://localhost:5173/api/question/create", {
-            method: "POST",
-            body: JSON.stringify({
-              collectionName: $collectionName,
-              tags: $tags,
-              content: file.content.substring(i, i + maxContentLength),
-            }),
-            headers: {
-              "content-type": "application/json",
-            },
-          });
-        }
-      })
-    );
+    if (data.session?.user.id) {
+      await Promise.all(
+        await stagedFiles.map(async (file: FileData) => {
+          for (let i = 0; i < file.content.length; i = i + maxContentLength) {
+            console.log(i);
+            console.log($collectionName);
+            let resp = await fetch(
+              "http://localhost:5173/api/question/create",
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  userId: data.session?.user.id,
+                  collectionName: $collectionName,
+                  tags: $tags,
+                  content: file.content.substring(i, i + maxContentLength),
+                }),
+                headers: {
+                  "content-type": "application/json",
+                },
+              }
+            );
+          }
+        })
+      );
+    }
   }
 
   async function onStageFiles(event: CustomEvent) {
@@ -48,14 +59,17 @@
       rejectFiles.push(...results[1]);
       stagedFiles = stagedFiles;
       rejectFiles = rejectFiles;
-      tokenTotal = stagedFiles.reduce((tokens, file) => tokens + file.tokenCount, 0);
+      tokenTotal = stagedFiles.reduce(
+        (tokens, file) => tokens + file.tokenCount,
+        0
+      );
       isStagingFiles = false;
     }
   }
 
   async function remove(id: number) {
     rejectFiles = [];
-    stagedFiles = stagedFiles.filter(file => {
+    stagedFiles = stagedFiles.filter((file) => {
       if (file.id !== id) {
         return true;
       } else {
@@ -84,8 +98,8 @@
       disableDefaultStyles={false}
       inputElement={undefined}
       required={false}
-      on:drop={async e => await onStageFiles(e)}
-      on:click={async e => await onStageFiles(e)}
+      on:drop={async (e) => await onStageFiles(e)}
+      on:click={async (e) => await onStageFiles(e)}
     />
 
     <div class="divider" />
@@ -104,7 +118,7 @@
 
     {#if isStagingFiles}
       <div class="mb-6 mt-2 flex justify-center">
-        <img src="images/loading.gif" alt="Loading" />
+        <img src="/images/loading.gif" alt="Loading" />
       </div>
     {/if}
 
