@@ -90,28 +90,24 @@
 </script>
 
 {#if question}
-  <div class="flex mb-3 mt-10">
-    <div class="w-full md:w-1/4" />
-    <div class="w-full md:w-1/2 lg:w-5/12">
-      <div class="flex flex-row gap-2 mb-2">
-        <div class="flex-1">
-          <Collections {handleChangeCollection} />
-        </div>
-        <div class="flex-4">
-          <CollectionsFilter {handleChangeFilter} />
-        </div>
-      </div>
-      <Question {handleChangeQuestion} question={question.question} />
-      <div class="flex flex-col">
-        <Answers
-          {handleUpdateAnswer}
-          {handleRemoveAnswer}
-          answers={question.answers}
-          {removedAnswers}
-        />
-      </div>
+  <div class="flex flex-row gap-2 mb-2">
+    <div class="flex-1 mb-4">
+      <Collections {handleChangeCollection} />
     </div>
-    <div class="w-full md:w-1/4" />
+    <div class="flex-4">
+      <CollectionsFilter {handleChangeFilter} />
+    </div>
+  </div>
+  <div class="mb-4">
+    <Question {handleChangeQuestion} question={question.question} />
+  </div>
+  <div class="flex flex-col">
+    <Answers
+      {handleUpdateAnswer}
+      {handleRemoveAnswer}
+      answers={question.answers}
+      {removedAnswers}
+    />
   </div>
   <Process
     {handleApproveQuestion}

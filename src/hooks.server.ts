@@ -23,10 +23,14 @@ export const handle: Handle = async ({ event, resolve }) => {
     } = await event.locals.supabase.auth.getSession();
     return session;
   };
+  console.log("SESSION");
 
   const session = await event.locals.getSession();
 
-  return resolve(event, {
+  if (session) {
+    console.log("SESSION", "ASKLDJFASDKLFJ");
+  }
+  return await resolve(event, {
     /**
      * There´s an issue with `filterSerializedResponseHeaders` not working when using `sequence`
      *

@@ -1,6 +1,17 @@
 import { AuthApiError } from "@supabase/supabase-js";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import type { PageServerLoad } from "./$types";
+
+// export const load: PageServerLoad = async ({ locals: { getSession } }) => {
+//   const session = await getSession();
+//   if (session) {
+//     throw redirect(302, "/app/collections/");
+//   }
+//   return {
+//     session: await getSession(),
+//   };
+// };
 
 export const actions: Actions = {
   signinEmail: async ({ request, locals }) => {
@@ -30,6 +41,7 @@ export const actions: Actions = {
       provider: "google",
       options: {
         scopes: "https://www.googleapis.com/auth/userinfo.email",
+        redirectTo: "http://localhost:5173/app/collections/",
       },
     });
     console.log(data, err);
@@ -44,7 +56,7 @@ export const actions: Actions = {
         message: "Server error. Try again later.",
       });
     }
-
+    console.log(data.url);
     throw redirect(303, data.url);
   },
 };

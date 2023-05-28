@@ -24,7 +24,7 @@
   }
 
   function removeTag(tagToRemove: string) {
-    $tags = $tags.filter(tag => tag != tagToRemove);
+    $tags = $tags.filter((tag) => tag != tagToRemove);
   }
 
   // TODO: fix this shit because it can't detect backspace?
@@ -36,7 +36,7 @@
   }
 </script>
 
-<div class="flex-1">
+<div class="flex-1 mb-2">
   <div class="form-control">
     <form method="POST" on:submit|preventDefault={addTag}>
       <input
@@ -53,7 +53,9 @@
 
   <div class="flex flex-wrap">
     {#each $tags as tag}
-      <div class="flex bg-neutral text-neutral-content pt-1 pb-1 pl-2 pr-2 mr-2 rounded-md text-sm">
+      <div
+        class="flex bg-neutral text-neutral-content pt-1 pb-1 pl-2 pr-2 mr-2 rounded-md text-sm"
+      >
         <div class="flex-initial pr-4">{tag}</div>
         <div
           class="flex-end hover:text-error cursor-pointer"

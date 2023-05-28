@@ -60,6 +60,10 @@ export const POST: RequestHandler = async ({ request }) => {
         },
       });
     }
+    console.log("RETURNING");
+    return new Response(
+      JSON.stringify({ status: "success", data: { count: questions.length } })
+    );
   }
 
   return new Response(JSON.stringify({ status: "error" }));
