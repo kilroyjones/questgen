@@ -15,7 +15,6 @@ export const POST: RequestHandler = async ({ request }) => {
       questions: true,
     },
   });
-  console.log(collection);
   return new Response(JSON.stringify({ status: "success" }));
   // TODO: Handle error
   // return new Response("ERROR");

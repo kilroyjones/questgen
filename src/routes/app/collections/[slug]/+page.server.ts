@@ -3,10 +3,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
-  console.log(params);
+import type { PageServerLoad } from "./$types";
+import { redirect } from "@sveltejs/kit";
 
+export const load: PageServerLoad = async ({ params, locals }) => {
   // Assume getting all collections
   // TODO: Add handle for getting a specific collection?
   let collection = await prisma.collection.findUnique({
@@ -15,9 +15,8 @@ export async function load({ params }) {
     },
     include: {
       questions: true,
+      tags: true,
     },
   });
-
-  console.log(collection);
-  return collection;
-}
+  return { "collection": collection };
+};

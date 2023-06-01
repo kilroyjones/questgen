@@ -190,7 +190,7 @@
       <button class="btn" on:click={cancelProcessing}>Cancel</button>
     </div>
   {:else}
-    <div class="flex justify-end">
+    <div class="flex justify-end mt-3">
       <button class="btn" on:click={resetProcessing}>Ok</button>
     </div>
   {/if}

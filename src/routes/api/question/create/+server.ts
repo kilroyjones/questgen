@@ -48,8 +48,7 @@ export const POST: RequestHandler = async ({ request }) => {
           createdBy: data.userId,
           question: question[0],
           collectionId: collection.id,
-          isDeleted: false,
-          isApproved: false,
+          status: 1,
           answers: {
             create: answers,
           },

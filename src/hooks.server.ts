@@ -4,7 +4,6 @@ import {
 } from "$env/static/public";
 import { createSupabaseServerClient } from "@supabase/auth-helpers-sveltekit";
 import type { Handle } from "@sveltejs/kit";
-import { redirect, error } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
   console.log("HOOKS SERVER");
@@ -23,13 +22,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     } = await event.locals.supabase.auth.getSession();
     return session;
   };
-  console.log("SESSION");
 
-  const session = await event.locals.getSession();
-
-  if (session) {
-    console.log("SESSION", "ASKLDJFASDKLFJ");
-  }
   return await resolve(event, {
     /**
      * There´s an issue with `filterSerializedResponseHeaders` not working when using `sequence`

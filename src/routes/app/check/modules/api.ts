@@ -1,20 +1,30 @@
-import type { MultipleChoiceQuestionWithAnswers } from "$lib/models";
+import type {
+  MultipleChoiceQuestionWithAnswers,
+  QuestionStatus,
+} from "$lib/models";
 
-export async function getCollections() {
+export async function getCollections(createdBy: string) {
   return await fetch("http://localhost:5173/api/collections/browse", {
     method: "POST",
-    body: JSON.stringify({}),
+    body: JSON.stringify({
+      createdBy: createdBy,
+    }),
     headers: {
       "content-type": "application/json",
     },
   });
 }
 
-export async function getQuestion(filters: string, collectionId: number) {
+export async function getQuestion(
+  createdBy: string,
+  questionStatus: QuestionStatus,
+  collectionId: number
+) {
   return await fetch("http://localhost:5173/api/question/get", {
     method: "POST",
     body: JSON.stringify({
-      filters: filters,
+      createdBy: createdBy,
+      questionStatus: questionStatus,
       collectionId: collectionId,
     }),
     headers: {

@@ -12,7 +12,13 @@ export class FileData {
   fileType: FileType;
   tokenCount: number;
 
-  constructor(id: number, name: string, content: string, fileType: FileType, tokenCount: number) {
+  constructor(
+    id: number,
+    name: string,
+    content: string,
+    fileType: FileType,
+    tokenCount: number
+  ) {
     this.id = id;
     this.name = name;
     this.content = content;
@@ -37,19 +43,17 @@ export type Question = {
   answers: Array<MultipleChoiceAnswer>;
 };
 
-export enum QuestionStatus {
-  ALL,
-  APPROVED,
-  UNAPPROVED,
-  DELETED,
-}
-
-export type MultipleChoiceQuestionWithAnswers = Prisma.MultipleChoiceQuestionGetPayload<{
-  include: { answers: true };
-}>;
+export type MultipleChoiceQuestionWithAnswers =
+  Prisma.MultipleChoiceQuestionGetPayload<{
+    include: { answers: true };
+  }>;
 
 export type CollectionsWithTags = Prisma.CollectionGetPayload<{
   include: { tags: true };
+}>;
+
+export type CollectionsWithTagsAndQuestions = Prisma.CollectionGetPayload<{
+  include: { tags: true; questions: true };
 }>;
 
 export enum Action {
@@ -59,4 +63,10 @@ export enum Action {
   GetCollectionList,
   GetQuestion,
   UpdateQuestion,
+}
+
+export enum QuestionStatus {
+  APPROVED = 0,
+  NOTAPPROVED = 1,
+  DELETED = -1,
 }

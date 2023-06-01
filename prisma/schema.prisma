@@ -16,8 +16,7 @@ model MultipleChoiceQuestion {
   question String 
   collectionId Int
   collection Collection @relation(fields: [collectionId], references: [id])
-  isDeleted Boolean 
-  isApproved Boolean
+  status Int
   answers MultipleChoiceAnswer[]
 }
 

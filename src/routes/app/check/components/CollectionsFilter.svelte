@@ -1,16 +1,19 @@
 <script lang="ts">
+  import { QuestionStatus } from "$lib/models";
+
   export let handleChangeFilter: Function;
 
-  let filter: string;
+  let questionStatus: QuestionStatus;
 </script>
 
 <select
   class="select w-full mx-auto border-2 border-gray-400"
-  bind:value={filter}
-  on:change={() => handleChangeFilter(filter)}
+  bind:value={questionStatus}
+  on:change={(e) => {
+    handleChangeFilter(questionStatus);
+  }}
 >
-  <option>Not approved</option>
-  <option selected>Approved</option>
-  <option>Deleted</option>
-  <option>All</option>
+  <option value={QuestionStatus.NOTAPPROVED}>Not approved</option>
+  <option value={QuestionStatus.APPROVED}>Approved</option>
+  <option value={QuestionStatus.DELETED}>Deleted</option>
 </select>

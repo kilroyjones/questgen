@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
 
   export let handleChangeCollection: Function;
+  export let createdBy: string;
 
   let collections: Array<CollectionsWithTags>;
   let collectionName: string;
@@ -18,7 +19,7 @@
   }
 
   onMount(async () => {
-    let resp = await getCollections();
+    let resp = await getCollections(createdBy);
     console.log(resp);
     if (resp) {
       collections = await resp.json();

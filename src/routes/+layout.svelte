@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { invalidate } from "$app/navigation";
   import Navbar from "$lib/navigation/Navbar.svelte";
   import { onMount } from "svelte";

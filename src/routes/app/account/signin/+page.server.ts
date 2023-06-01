@@ -41,10 +41,9 @@ export const actions: Actions = {
       provider: "google",
       options: {
         scopes: "https://www.googleapis.com/auth/userinfo.email",
-        redirectTo: "http://localhost:5173/app/collections/",
+        redirectTo: "http://localhost:5173/app/account/signingIn/",
       },
     });
-    console.log(data, err);
 
     if (err) {
       if (err instanceof AuthApiError && err.status === 400) {

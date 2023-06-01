@@ -7,25 +7,31 @@
     updateQuestion,
   } from "./modules/api";
   import { onMount } from "svelte";
-  import type { MultipleChoiceQuestionWithAnswers } from "$lib/models";
+  import type {
+    MultipleChoiceQuestionWithAnswers,
+    QuestionStatus,
+  } from "$lib/models";
   import Collections from "./components/Collections.svelte";
   import CollectionsFilter from "./components/CollectionsFilter.svelte";
   import Process from "./components/Process.svelte";
   import Question from "./components/Question.svelte";
   import type { MultipleChoiceAnswer } from "@prisma/client";
 
+  export let data;
+
   let question: MultipleChoiceQuestionWithAnswers | null = null;
-  let filter: string;
+  let questionStatus: QuestionStatus;
   let collectionId: number;
   let removedAnswers: Array<number> = [];
+  let createdBy: string;
 
   async function handleChangeCollection(newId: number) {
     collectionId = newId;
     setupQuestion();
   }
 
-  async function handleChangeFilter(newFilter: string) {
-    filter = newFilter;
+  async function handleChangeFilter(newQuestionStatus: QuestionStatus) {
+    questionStatus = newQuestionStatus;
     setupQuestion();
   }
 
@@ -76,7 +82,7 @@
   }
 
   async function setupQuestion() {
-    let resp = await getQuestion(filter, collectionId);
+    let resp = await getQuestion(createdBy, questionStatus, collectionId);
     if (resp) {
       question = await resp.json();
     } else {
@@ -85,14 +91,19 @@
   }
 
   onMount(async () => {
-    await setupQuestion();
+    if (data.session) {
+      createdBy = data.session.user.id;
+      await setupQuestion();
+    } else {
+      // TODO: THROW ERROR SINCE NOT LOGGED IN
+    }
   });
 </script>
 
 {#if question}
   <div class="flex flex-row gap-2 mb-2">
     <div class="flex-1 mb-4">
-      <Collections {handleChangeCollection} />
+      <Collections {handleChangeCollection} {createdBy} />
     </div>
     <div class="flex-4">
       <CollectionsFilter {handleChangeFilter} />
