@@ -1,5 +1,6 @@
 import type { RequestHandler } from "./$types";
 import { PrismaClient } from "@prisma/client";
+import { QuestionStatus } from "$lib/models";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,7 @@ export const POST: RequestHandler = async ({ request }) => {
       id: req.id,
     },
     data: {
-      isApproved: true,
+      status: QuestionStatus.APPROVED,
     },
   });
 

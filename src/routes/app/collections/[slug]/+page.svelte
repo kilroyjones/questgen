@@ -1,15 +1,24 @@
 <script lang="ts">
-  import type { Collection, MultipleChoiceQuestion, Tag } from "@prisma/client";
-  import { QuestionStatus } from "$lib/models.js";
-
+  import type {
+    Collection,
+    MultipleChoiceAnswer,
+    MultipleChoiceQuestion,
+    Tag,
+  } from "@prisma/client";
+  import QuestionWrapper from "./components/QuestionWrapper.svelte";
   export let data;
-
-  let isExpanded: boolean = false;
 
   //  TODO: USE THIS IN OTHER PLACES
   let collection:
-    | (Collection & { questions: MultipleChoiceQuestion[]; tags: Tag[] })
+    | (Collection & {
+        questions: Array<
+          MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }
+        >;
+        tags: Tag[];
+      })
     | null = data.collection;
+
+  async function deleteQuestion() {}
 </script>
 
 {#if collection}
@@ -27,32 +36,11 @@
       {/each}
     </div>
   </div>
+  <div class="flex flex-col mb-3 text-xl" />
   <hr />
   <div class="flex flex-col mt-3">
     {#each collection.questions as question}
-      {#if question.status != QuestionStatus.DELETED}
-        <div
-          class="card bg-base-100 shadow-xl hover:bg-gray-100 cursor-pointer mb-3"
-        >
-          <div class="card-body">
-            {question.question}
-            <div class="">
-              <div class="flex text-sm justify-between">
-                <div class="flex items-end">
-                  {#if question.status == QuestionStatus.APPROVED}
-                    Approved
-                  {:else}
-                    Not approved
-                  {/if}
-                </div>
-                <div>
-                  <button class="btn h-[2rem] min-h-[2rem]">Edit</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      {/if}
+      <QuestionWrapper {question} {deleteQuestion} />
     {/each}
   </div>
 {/if}

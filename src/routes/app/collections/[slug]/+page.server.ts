@@ -14,9 +14,14 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       id: parseInt(params.slug),
     },
     include: {
-      questions: true,
+      questions: {
+        include: {
+          answers: true,
+        },
+      },
       tags: true,
     },
   });
+  console.log(collection);
   return { "collection": collection };
 };
