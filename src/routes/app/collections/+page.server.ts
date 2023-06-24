@@ -8,5 +8,5 @@ export const load: PageServerLoad = async ({ locals }) => {
       session: await locals.getSession(),
     };
   }
-  throw redirect(302, "/app/account/signIn");
+  throw redirect(302, "/app/account/signin");
 };

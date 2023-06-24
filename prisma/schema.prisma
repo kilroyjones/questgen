@@ -12,12 +12,12 @@ datasource db {
 
 model MultipleChoiceQuestion {
   id Int @id @default(autoincrement())
-  createdBy String 
+  userId String 
   question String 
   collectionId Int
   collection Collection @relation(fields: [collectionId], references: [id])
   status Int
-  answers MultipleChoiceAnswer[]
+  answers MultipleChoiceAnswer[] 
 }
 
 model MultipleChoiceAnswer {
@@ -25,7 +25,7 @@ model MultipleChoiceAnswer {
   questionId Int
   answer String
   isCorrect Boolean 
-  multipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  multipleChoiceQuestion MultipleChoiceQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Tag {
@@ -36,7 +36,7 @@ model Tag {
 
 model Collection {
   id Int @id @default(autoincrement())
-  createdBy String 
+  userId String 
   name String
   questions MultipleChoiceQuestion [] 
   tags Tag[]

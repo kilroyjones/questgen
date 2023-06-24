@@ -1,8 +1,9 @@
 import { env } from "$env/dynamic/private";
 import type { RequestHandler } from "./$types";
 import { Configuration, OpenAIApi } from "openai";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type Collection } from "@prisma/client";
 import { parseAnswers, parseQuestions, parseTags } from "./parse";
+import type { Result } from "$lib/models";
 
 const configuration = new Configuration({
   apiKey: env.PRIVATE_OPENAI_KEY,
@@ -10,65 +11,83 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 const prisma = new PrismaClient();
 
-// TODO: Clean this up, handle errors, look at parsing questions to a particular type for
-// ease of handling
+/**
+ * Processes text and creates questions
+ *
+ * This handler will parse the questions and tags. In the database the
+ * following tables will be have entries added.
+ *  - Collection
+ *  - MultipleChoiceQuestion(s)
+ *  - Tag(s)
+ */
 export const POST: RequestHandler = async ({ request }) => {
   let data = await request.json();
-  console.log(data);
+  let result: Result;
+  if (data) {
+    result = await getAPIResult(data.content);
 
-  // TODO: If result successful process
-  let result = await getAPIResult(data.content);
-  let content = result; // FIX
+    if (result.status == "error") {
+      return new Response(JSON.stringify({ status: "error" }));
+    }
 
-  console.log("-----");
-  console.log(content);
-  if (content) {
+    let content = result.data;
+    let userId = result.data.userId;
     let questions = await parseQuestions(content);
     let tags = await parseTags(data.tags);
-    console.log(questions.length);
-    console.log(tags);
-
-    //TODO: Create collection separately and then add questions to it
-    let collection = await getCollection(
+    let collection = await createCollection(
       data.collectionName,
       data.userId,
       tags
     );
-    // let count = await prisma.collection.questions.count({
-    //   where{ id: collection.}
-    // })
-    console.log(collection);
 
-    console.log("-------------");
-    console.log(questions);
-    for (const question of questions) {
-      let answers = await parseAnswers(question);
-      await prisma.multipleChoiceQuestion.create({
-        data: {
-          createdBy: data.userId,
-          question: question[0],
-          collectionId: collection.id,
-          status: 1,
-          answers: {
-            create: answers,
-          },
-          // TODO: Move tags to part of collections
-        },
-        select: {
-          id: true,
-        },
-      });
+    result = await addQuestionsToCollection(userId, questions, collection.id);
+    if (result.status == "success") {
+      return new Response(JSON.stringify({ status: "succes" }));
     }
-    console.log("RETURNING");
-    return new Response(
-      JSON.stringify({ status: "success", data: { count: questions.length } })
-    );
   }
-
   return new Response(JSON.stringify({ status: "error" }));
 };
 
-async function getAPIResult(content: string): Promise<any> {
+/**
+ * This performs the insert operations to add the questions to the database.
+ */
+async function addQuestionsToCollection(
+  userId: string,
+  questions: Array<Array<string>>,
+  collectionId: number
+): Promise<Result> {
+  for (const question of questions) {
+    let answers = await parseAnswers(question);
+    if (answers.length > 0) {
+      try {
+        await prisma.multipleChoiceQuestion.create({
+          data: {
+            userId: userId,
+            question: question[0],
+            collectionId: collectionId,
+            status: 1,
+            answers: {
+              create: answers,
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+      } catch (error) {
+        return { status: "success" };
+      }
+    }
+  }
+  return { status: "error" };
+}
+
+/**
+ * Calls the OpenAI API to create questions
+ *
+ * TODO: Fix the prompts to be more general
+ */
+async function getAPIResult(content: string): Promise<Result> {
   let result = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [
@@ -82,28 +101,31 @@ async function getAPIResult(content: string): Promise<any> {
     ],
   });
 
-  // TODO: Correctly handle resulting errors
-  return result.data.choices[0].message?.content;
+  if (result.data.choices[0].message?.content) {
+    return {
+      status: "success",
+      data: result.data.choices[0].message?.content,
+    };
+  } else {
+    return { status: "error" };
+  }
 }
 
-// TODO: fix this so that a collection is being return?
-async function getCollection(
+/**
+ * Creates the collection
+ */
+async function createCollection(
   collectionName: string,
   userId: string,
   tags: Array<any>
-): Promise<any> {
-  const collection = await prisma.collection.create({
+): Promise<Collection> {
+  return await prisma.collection.create({
     data: {
-      createdBy: userId,
+      userId: userId,
       name: collectionName,
       tags: {
         create: tags,
       },
     },
-
-    include: {
-      questions: true,
-    },
   });
-  return collection;
 }

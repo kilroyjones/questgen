@@ -8,12 +8,11 @@ export const POST: RequestHandler = async ({ request }) => {
   let questionStatus = data.questionStatus;
   let filters: Array<object> = [];
 
-  console.log(questionStatus, data.collectionId);
   let question = await prisma.multipleChoiceQuestion.findFirst({
     where: {
       status: questionStatus,
       collectionId: data.collectionId,
-      createdBy: data.createdBy,
+      userId: data.userId,
     },
     include: {
       answers: true,
@@ -21,7 +20,6 @@ export const POST: RequestHandler = async ({ request }) => {
   });
 
   // TODO: FIX ERROR WHEN NO QUESTIONS OF THAT TYPE
-  console.log(question);
   if (question) {
     return new Response(JSON.stringify(question));
   }

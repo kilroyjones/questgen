@@ -43,11 +43,6 @@ export type Question = {
   answers: Array<MultipleChoiceAnswer>;
 };
 
-export type MultipleChoiceQuestionWithAnswers =
-  Prisma.MultipleChoiceQuestionGetPayload<{
-    include: { answers: true };
-  }>;
-
 export type CollectionsWithTags = Prisma.CollectionGetPayload<{
   include: { tags: true };
 }>;
@@ -70,3 +65,8 @@ export enum QuestionStatus {
   NOTAPPROVED = 1,
   DELETED = -1,
 }
+
+export type Result = {
+  status: string;
+  data?: any | null;
+};

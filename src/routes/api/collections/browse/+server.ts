@@ -8,7 +8,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
   let collections = await prisma.collection.findMany({
     where: {
-      createdBy: data.createdBy,
+      userId: data.userId,
     },
     include: { tags: true },
   });

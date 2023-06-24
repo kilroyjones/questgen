@@ -7,11 +7,11 @@
   import CollectionParameters from "./components/CollectionParameters.svelte";
   import { tags, collectionName } from "./modules/state";
   import type { PageData } from "./$types";
+  import { createQuestions } from "./modules/api";
 
-  import type { FileData } from "$lib/models";
+  import type { FileData, Result } from "$lib/models";
 
   export let data: PageData;
-  console.log(data?.session?.user.id);
 
   let stagedFiles: Array<FileData> = [];
   let rejectFiles: Array<string> = [];
@@ -23,50 +23,46 @@
   let estimatedQueries: number = 0;
   let queryMsgLog: Array<string> = [];
 
-  type ApiResponse = {
-    status: string;
-    data: { count: number };
-  };
-
-  async function generate() {
-    // TODO: Fix
-    // Needs proper return types
-    // Messaging needs to work
-    // When navigating to the page it should reset everything and stop processing
+  /**
+   * Processes all stagesFiles in order to create questions and add them
+   * to the collection.
+   */
+  async function process(userId: string) {
     let maxContentLength = 3000;
+    await Promise.all(
+      await stagedFiles.map(async (file: FileData) => {
+        for (let i = 0; i < file.content.length; i = i + maxContentLength) {
+          currentQuery += 1;
+          if (isProcessing) {
+            let content = file.content.substring(i, i + maxContentLength);
+            let response = await createQuestions(
+              userId,
+              $collectionName,
+              $tags,
+              content
+            );
+            let result: Result = await response.json();
+            if (result.status == "success") {
+              queryMsgLog.push(`Added: ${result.data.count}`);
+            } else {
+              queryMsgLog.push(`Error processing!`);
+            }
+            queryMsgLog = queryMsgLog;
+          }
+        }
+      })
+    );
+  }
+
+  /**
+   * Generate sends the content to be turned into questions if the user is logged
+   * in and there are files which have been staged.
+   */
+  async function generate() {
     if (stagedFiles.length > 0) {
       isProcessing = true;
       if (data.session?.user.id) {
-        await Promise.all(
-          await stagedFiles.map(async (file: FileData) => {
-            for (let i = 0; i < file.content.length; i = i + maxContentLength) {
-              currentQuery += 1;
-              if (isProcessing) {
-                let resp = await fetch(
-                  "http://localhost:5173/api/question/create",
-                  {
-                    method: "POST",
-                    body: JSON.stringify({
-                      userId: data.session?.user.id,
-                      collectionName: $collectionName,
-                      tags: $tags,
-                      content: file.content.substring(i, i + maxContentLength),
-                    }),
-                    headers: {
-                      "content-type": "application/json",
-                    },
-                  }
-                );
-                // TODO: Get resp to determine how many questions were actually added
-                let res = await resp.json();
-                if (res.status == "success") {
-                  queryMsgLog.push(`Added: ${res.data.count}`);
-                  queryMsgLog = queryMsgLog;
-                }
-              }
-            }
-          })
-        );
+        process(data.session?.user.id);
       }
       isProcessingComplete = true;
     }

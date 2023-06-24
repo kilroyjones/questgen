@@ -1,13 +1,14 @@
+import type { QuestionStatus } from "$lib/models";
 import type {
-  MultipleChoiceQuestionWithAnswers,
-  QuestionStatus,
-} from "$lib/models";
+  MultipleChoiceQuestion,
+  MultipleChoiceAnswer,
+} from "@prisma/client";
 
-export async function getCollections(createdBy: string) {
+export async function getCollections(userId: string) {
   return await fetch("http://localhost:5173/api/collections/browse", {
     method: "POST",
     body: JSON.stringify({
-      createdBy: createdBy,
+      userId: userId,
     }),
     headers: {
       "content-type": "application/json",
@@ -16,14 +17,14 @@ export async function getCollections(createdBy: string) {
 }
 
 export async function getQuestion(
-  createdBy: string,
+  userId: string,
   questionStatus: QuestionStatus,
   collectionId: number
 ) {
   return await fetch("http://localhost:5173/api/question/get", {
     method: "POST",
     body: JSON.stringify({
-      createdBy: createdBy,
+      userId: userId,
       questionStatus: questionStatus,
       collectionId: collectionId,
     }),
@@ -33,12 +34,15 @@ export async function getQuestion(
   });
 }
 
-export async function deleteQuestion(
-  question: MultipleChoiceQuestionWithAnswers
+export async function deleteQuestions(
+  questions: Array<MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }>
 ) {
+  let ids = questions.map((question) => question.id);
   return await fetch("http://localhost:5173/api/question/delete", {
     method: "DELETE",
-    body: JSON.stringify({ id: question.id }),
+    body: JSON.stringify({
+      ids: ids,
+    }),
     headers: {
       "content-type": "application/json",
     },
@@ -46,7 +50,7 @@ export async function deleteQuestion(
 }
 
 export async function updateQuestion(
-  question: MultipleChoiceQuestionWithAnswers
+  question: MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }
 ) {
   let resp = await fetch("http://localhost:5173/api/question/update", {
     method: "POST",
@@ -58,7 +62,7 @@ export async function updateQuestion(
 }
 
 export async function approveQuestion(
-  question: MultipleChoiceQuestionWithAnswers
+  question: MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }
 ) {
   return await fetch("http://localhost:5173/api/question/approve", {
     method: "POST",

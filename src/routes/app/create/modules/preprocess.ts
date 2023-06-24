@@ -6,49 +6,78 @@ import { FileData, FileType } from "$lib/models";
 pdfjs.GlobalWorkerOptions.workerSrc = "../pdf.worker.min.js";
 const enc = encoding_for_model("gpt-3.5-turbo");
 
+/**
+ * Extracts text and counts tokens from a list of PDFs
+ *
+ * This function takes in an id which is equal to the length of the currently
+ * staged files and a list of files. It attempts to read text content from the
+ * PDFs, spliting the files between staged and rejected depending on whether it
+ * can read the files or not.
+ */
 export async function processFiles(
   id: number,
   files: Array<File>
 ): Promise<[Array<FileData>, Array<string>]> {
   let stagedFiles: Array<FileData> = [];
-  let rejectFiles: Array<string> = [];
+  let rejectedFiles: Array<string> = [];
+  let fileData: FileData | null;
+
   await Promise.all(
     files.map(async (file: File) => {
       switch (file.type) {
         case "application/pdf":
-          let content = await getPDFContent(file);
-          let tokenCount = await getTokenCount(content);
-          stagedFiles.push(
-            new FileData(
-              id + stagedFiles.length,
-              file.name,
-              content,
-              FileType.PDF,
-              tokenCount
-            )
-          );
+          fileData = await processPDF(id + stagedFiles.length, file);
           break;
         default:
-          rejectFiles.push(file.name);
+          fileData = null;
+      }
+      if (fileData) {
+        stagedFiles.push(fileData);
+      } else {
+        rejectedFiles.push(file.name);
       }
     })
   );
-  return [stagedFiles, rejectFiles];
+
+  return [stagedFiles, rejectedFiles];
 }
 
+/**
+ * Extracts PDF text and creates FileData object
+ */
+async function processPDF(id: number, file: File): Promise<FileData | null> {
+  try {
+    let content = await getPDFContent(file);
+
+    if (content == null) {
+      return null;
+    }
+
+    let tokenCount = await getTokenCount(content);
+    return new FileData(id, file.name, content, FileType.PDF, tokenCount);
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Counts token based on encoder defined at top of this source file
+ */
 export async function getTokenCount(document: string): Promise<number> {
   let result = new TextDecoder().decode(enc.decode(enc.encode(document)));
   return result.length;
 }
 
-// TODO: Create error type to handle when this fails
-// error type should be used for all file types
-export async function getPDFContent(file: File): Promise<string> {
+/**
+ * Converts PDF text content into a string
+ */
+export async function getPDFContent(file: File): Promise<string | null> {
   let content = "";
   try {
     const pdfData = new Uint8Array(await file.arrayBuffer());
     const loadingTask = pdfjs.getDocument(pdfData);
     let pdf = await loadingTask.promise;
+
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
       const textContent = await page.getTextContent();
@@ -56,10 +85,9 @@ export async function getPDFContent(file: File): Promise<string> {
         .map((item) => (item as TextItem).str)
         .join(" ");
     }
+
     return content;
   } catch (error) {
-    // TODO: Handle erro
-    return "";
+    return null;
   }
-  return "ERROR";
 }

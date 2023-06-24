@@ -15,7 +15,7 @@
     let res = await fetch("http://localhost:5173/api/question/get", {
       method: "POST",
       body: JSON.stringify({
-        createdBy: "97c10b93-4479-4a25-bfed-7f50fb2e64c0",
+        userId: "97c10b93-4479-4a25-bfed-7f50fb2e64c0",
         questionStatus: 1,
         collectionId: 1,
       }),

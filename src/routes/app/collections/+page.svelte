@@ -10,7 +10,7 @@
       let resp = await fetch("http://localhost:5173/api/collections/browse", {
         method: "POST",
         body: JSON.stringify({
-          createdBy: data.session?.user.id,
+          userId: data.session?.user.id,
         }),
         headers: {
           "content-type": "application/json",

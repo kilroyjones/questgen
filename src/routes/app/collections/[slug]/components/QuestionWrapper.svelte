@@ -3,12 +3,13 @@
     MultipleChoiceAnswer,
     MultipleChoiceQuestion,
   } from "@prisma/client";
-  import AiOutlineEdit from "svelte-icons-pack/ai/AiOutlineEdit";
-  import Icon from "svelte-icons-pack/Icon.svelte";
   import QuestionEditModal from "./QuestionEditModal.svelte";
+  import Question from "./Question.svelte";
+  import Answers from "./Answers.svelte";
 
-  export let deleteQuestion: Function;
-  export let showAnswers = false;
+  export let handleSelectQuestion: Function;
+  export let handleDeleteQuestion: Function;
+  export let showAnswers = true;
   export let question:
     | MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] };
 
@@ -34,42 +35,8 @@
         on:click={() => toggleShowAnswer()}
         on:keydown={() => toggleShowAnswer()}
       >
-        <div class="flex justify-between">
-          <div class="flex font-bold">
-            <div class="flex mr-3">
-              <input type="checkbox" checked={false} on:click|stopPropagation />
-            </div>
-            <div class="flex">{question.question}</div>
-          </div>
-          <div class="flex-4 flex-row ml-4 min-w-[2rem]">
-            <div class="flex">
-              <span
-                on:click|stopPropagation={toggleShowModal}
-                on:keydown={toggleShowModal}
-                class="mr-2"
-              >
-                <Icon size="28" src={AiOutlineEdit} />
-              </span>
-            </div>
-          </div>
-        </div>
-        {#if showAnswers}
-          <div class="flex flex-col">
-            {#each question.answers as answer}
-              <div class="text-sm mb-2">
-                {#if answer.isCorrect}
-                  <div class="text-green-800 font-bold">
-                    {answer.answer}
-                  </div>
-                {:else}
-                  <div class="">
-                    {answer.answer}
-                  </div>
-                {/if}
-              </div>
-            {/each}
-          </div>
-        {/if}
+        <Question {question} {handleSelectQuestion} {toggleShowModal} />
+        {#if showAnswers} <Answers {question} {handleDeleteQuestion} />{/if}
       </div>
     </div>
   </div>

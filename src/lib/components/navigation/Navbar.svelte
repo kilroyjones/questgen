@@ -10,7 +10,6 @@
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
       <li><a href="/app/create">Create</a></li>
-      <li><a href="/app/check">Check</a></li>
       <li><a href="/app/collections">Collections</a></li>
       <li />
       {#if isLoggedIn}
