@@ -139,3 +139,30 @@
     {handleUpdateQuestion}
   />
 {/if}
+  let currentQuestion: Array<string> = [];
+  let lines = content.split("\n");
+  let answerRegex = /([A-Za-z][.)]) (.+)/;
+  let questionRegex = /^\d+[.)]/;
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].replace(/(\r\n|\n|\r)/gm, "");
+    let result = line.match(answerRegex);
+    if (result) {
+      if (currentQuestion.length > 0) {
+        currentQuestion.push(result[2]);
+      }
+    } else if (line.length > 3) {
+      if (currentQuestion.length > 1) {
+        questions.push(currentQuestion);
+      }
+
+      if (line.match(questionRegex)) {
+        line = line.substring(line.indexOf(" ") + 1);
+      }
+      currentQuestion = [line];
+    }
+  }
+  if (currentQuestion.length > 0) {
+    questions.push(currentQuestion);
+  }
+  return questions;

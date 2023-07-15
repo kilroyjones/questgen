@@ -1,32 +1,12 @@
-// TODO: Clean this and create a type for questions?
-export async function parseQuestions(content: string): Promise<Array<Array<string>>> {
-  let questions: Array<Array<string>> = [];
-  let currentQuestion: Array<string> = [];
-  let lines = content.split("\n");
-  let answerRegex = /([A-Za-z][.)]) (.+)/;
-  let questionRegex = /^\d+[.)]/;
+export async function parseQuestions(content: string): Promise<Array<Object>> {
+  let questions: Array<object> = [];
 
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i].replace(/(\r\n|\n|\r)/gm, "");
-    let result = line.match(answerRegex);
-    if (result) {
-      if (currentQuestion.length > 0) {
-        currentQuestion.push(result[2]);
-      }
-    } else if (line.length > 3) {
-      if (currentQuestion.length > 1) {
-        questions.push(currentQuestion);
-      }
+  let rows = content.split("\n");
+  for (let i = 1; i < rows.length; i++) {
+    let row = rows[i].split("\t");
+    console.log(row);
+  }
 
-      if (line.match(questionRegex)) {
-        line = line.substring(line.indexOf(" ") + 1);
-      }
-      currentQuestion = [line];
-    }
-  }
-  if (currentQuestion.length > 0) {
-    questions.push(currentQuestion);
-  }
   return questions;
 }
 

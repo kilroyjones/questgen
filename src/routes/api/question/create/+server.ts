@@ -4,6 +4,7 @@ import { Configuration, OpenAIApi } from "openai";
 import { PrismaClient, type Collection } from "@prisma/client";
 import { parseAnswers, parseQuestions, parseTags } from "./parse";
 import type { Result } from "$lib/models";
+import { logger } from "$lib/logger";
 
 const configuration = new Configuration({
   apiKey: env.PRIVATE_OPENAI_KEY,
@@ -22,28 +23,34 @@ const prisma = new PrismaClient();
  */
 export const POST: RequestHandler = async ({ request }) => {
   let data = await request.json();
+  let userId = data.userId;
   let result: Result;
-  if (data) {
-    result = await getAPIResult(data.content);
 
-    if (result.status == "error") {
-      return new Response(JSON.stringify({ status: "error" }));
-    }
+  if (!data) {
+    console.log("ERROR: ");
+    return new Response(JSON.stringify({ status: "error" }));
+  }
 
-    let content = result.data;
-    let userId = result.data.userId;
-    let questions = await parseQuestions(content);
-    let tags = await parseTags(data.tags);
-    let collection = await createCollection(
-      data.collectionName,
-      data.userId,
-      tags
-    );
+  result = await getAPIResult(data.content);
+  console.log(result);
 
+  if (result.status == "error") {
+    console.log(result);
+    return new Response(JSON.stringify({ status: "error" }));
+  }
+
+  let content = result.data.content;
+  let questions = await parseQuestions(content);
+  console.log(questions);
+  let tags = await parseTags(data.tags);
+  console.log(tags);
+  let collection = await createCollection(data.collectionName, data.userId, tags);
+  if (collection) {
     result = await addQuestionsToCollection(userId, questions, collection.id);
-    if (result.status == "success") {
-      return new Response(JSON.stringify({ status: "succes" }));
-    }
+  }
+  console.log(result);
+  if (result.status == "success") {
+    return new Response(JSON.stringify({ status: "success" }));
   }
   return new Response(JSON.stringify({ status: "error" }));
 };
@@ -94,9 +101,8 @@ async function getAPIResult(content: string): Promise<Result> {
       { role: "system", content: "You are a computer system teacher" },
       {
         role: "user",
-        content: `Given the following content, create multiple choice questions for IGCSE high school 
-                  computer science question numbered 1 to 8 for high school class. Make option (a),
-                  the first option, always the correct answer. Content: ${content}`,
+        content: `Create multiple choice questions in CSV format where the first column is the question, the second is the correct 
+                  answer, and the last three columns are incorrect answers. Use this content to create the questions: "${content}".`,
       },
     ],
   });
@@ -104,10 +110,10 @@ async function getAPIResult(content: string): Promise<Result> {
   if (result.data.choices[0].message?.content) {
     return {
       status: "success",
-      data: result.data.choices[0].message?.content,
+      data: { content: result.data.choices[0].message?.content },
     };
   } else {
-    return { status: "error" };
+    return { status: "error", data: result };
   }
 }
 
@@ -118,14 +124,19 @@ async function createCollection(
   collectionName: string,
   userId: string,
   tags: Array<any>
-): Promise<Collection> {
-  return await prisma.collection.create({
-    data: {
-      userId: userId,
-      name: collectionName,
-      tags: {
-        create: tags,
+): Promise<Collection | undefined> {
+  try {
+    let result = prisma.collection.create({
+      data: {
+        userId: userId,
+        name: collectionName,
+        tags: {
+          create: tags,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    logger.info(error);
+    return undefined;
+  }
 }

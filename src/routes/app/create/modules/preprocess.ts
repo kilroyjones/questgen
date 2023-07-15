@@ -54,7 +54,13 @@ async function processPDF(id: number, file: File): Promise<FileData | null> {
     }
 
     let tokenCount = await getTokenCount(content);
-    return new FileData(id, file.name, content, FileType.PDF, tokenCount);
+    return {
+      id: id,
+      name: file.name,
+      content: content,
+      fileType: FileType.PDF,
+      tokenCount: tokenCount,
+    };
   } catch (error) {
     return null;
   }
@@ -81,9 +87,7 @@ export async function getPDFContent(file: File): Promise<string | null> {
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
       const textContent = await page.getTextContent();
-      content += textContent.items
-        .map((item) => (item as TextItem).str)
-        .join(" ");
+      content += textContent.items.map(item => (item as TextItem).str).join(" ");
     }
 
     return content;

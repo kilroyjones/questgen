@@ -27,9 +27,7 @@
 
 {#if collections}
   {#each collections as collection}
-    <div
-      class="card bg-base-100 shadow-xl hover:bg-gray-100 cursor-pointer mb-3"
-    >
+    <div class="card bg-base-100 shadow-xl hover:bg-gray-100 cursor-pointer mb-3">
       <a href="/app/collections/{collection.id}">
         <div class="card-body p-4">
           <h2 class="card-title">

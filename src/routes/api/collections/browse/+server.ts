@@ -10,8 +10,14 @@ export const POST: RequestHandler = async ({ request }) => {
     where: {
       userId: data.userId,
     },
-    include: { tags: true },
+    include: {
+      tags: true,
+      _count: {
+        select: { questions: true },
+      },
+    },
   });
+  console.log(collections);
 
   return new Response(JSON.stringify(collections));
 };

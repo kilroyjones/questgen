@@ -3,8 +3,8 @@
 NAME="qb-container"
 
 if [ "$(docker ps -q -f name=$NAME)" ]; then 
-    docker stop $NAME
-	docker remove $NAME 
+    docker container stop $NAME
+	docker container rm $NAME 
 	echo "$NAME is stopped"
 else 
 	echo "$NAME is not running"
