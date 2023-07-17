@@ -1,9 +1,10 @@
 import * as pdfjs from "pdfjs-dist";
 import { encoding_for_model } from "@dqbd/tiktoken";
 import type { TextItem } from "pdfjs-dist/types/src/display/api";
-import { FileData, FileType } from "$lib/models";
+import type { ContentInfo } from "$lib/models";
+import { ContentType } from "$lib/models";
 
-pdfjs.GlobalWorkerOptions.workerSrc = "../pdf.worker.min.js";
+pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 const enc = encoding_for_model("gpt-3.5-turbo");
 
 /**
@@ -17,10 +18,10 @@ const enc = encoding_for_model("gpt-3.5-turbo");
 export async function processFiles(
   id: number,
   files: Array<File>
-): Promise<[Array<FileData>, Array<string>]> {
-  let stagedFiles: Array<FileData> = [];
+): Promise<[Array<ContentInfo>, Array<string>]> {
+  let stagedFiles: Array<ContentInfo> = [];
   let rejectedFiles: Array<string> = [];
-  let fileData: FileData | null;
+  let fileData: ContentInfo | null;
 
   await Promise.all(
     files.map(async (file: File) => {
@@ -43,9 +44,9 @@ export async function processFiles(
 }
 
 /**
- * Extracts PDF text and creates FileData object
+ * Extracts PDF text and creates ContentInfo object
  */
-async function processPDF(id: number, file: File): Promise<FileData | null> {
+async function processPDF(id: number, file: File): Promise<ContentInfo | null> {
   try {
     let content = await getPDFContent(file);
 
@@ -58,7 +59,7 @@ async function processPDF(id: number, file: File): Promise<FileData | null> {
       id: id,
       name: file.name,
       content: content,
-      fileType: FileType.PDF,
+      type: ContentType.PDF,
       tokenCount: tokenCount,
     };
   } catch (error) {

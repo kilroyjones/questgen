@@ -1,16 +1,16 @@
 import type { MultipleChoiceAnswer } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 
-export enum FileType {
+export enum ContentType {
   PDF,
   TEXT,
 }
 
-export type FileData = {
+export type ContentInfo = {
   id: number;
   name: string;
   content: string;
-  fileType: FileType;
+  type: ContentType;
   tokenCount: number;
 };
 

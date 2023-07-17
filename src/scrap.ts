@@ -166,3 +166,17 @@
     questions.push(currentQuestion);
   }
   return questions;
+{#if isProcessing}
+  <div class="mt-6 mb-4 text-lg">
+    Processing request: {currentQuery} of estimated {estimatedQueries}
+  </div>
+  <hr />
+  <div class="mb-4">
+    {#each queryMsgLog as msg}
+      <div>{msg}</div>
+    {/each}
+  </div>
+  {#if queryMsgLog.length > 0}
+    <hr />
+  {/if}
+{/if}

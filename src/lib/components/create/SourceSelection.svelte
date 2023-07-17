@@ -53,6 +53,12 @@
   />
 
   <div class="flex justify-end">
-    <button class="btn" on:click={() => handleStageText(stagedText)}>Add</button>
+    <button
+      class="btn"
+      on:click={() => {
+        handleStageText(stagedText);
+        stagedText = "";
+      }}>Add</button
+    >
   </div>
 {/if}
