@@ -1,5 +1,6 @@
 <script lang="ts">
   import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
+  import { collectionName } from "$lib/stores/create";
 
   export let handleStageFiles: Function;
   export let handleStageText: Function;
@@ -15,17 +16,19 @@
 <div class="text-center mb-4">
   <div class="btn-group variant-filled">
     <button
-      class="btn {mode == 'file' ? 'bg-primary border-0 hover:bg-primary' : ''}"
+      class="btn {mode == 'file' ? 'bg-primary border-0' : ''}"
       on:mousedown={() => changeMode("file")}>Files</button
     >
     <button
-      class="btn {mode == 'text' ? 'bg-primary border-0 hover:bg-primary' : ''}"
+      class="btn {mode == 'text' ? 'bg-primary border-0' : ''}"
       on:mousedown={() => changeMode("text")}>Text</button
     >
   </div>
 </div>
 
-<div class="mb-4 font-bold">Add sample questions or content.</div>
+<div class="mb-4 font-bold">
+  Add sample questions or content for <span class="text-primary">{$collectionName}</span>.
+</div>
 {#if mode == "file"}
   <Dropzone
     accept={undefined}

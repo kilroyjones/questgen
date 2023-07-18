@@ -37,11 +37,11 @@
 <div class="flex justify-center mb-4">
   <div class="btn-group variant-filled">
     <button
-      class="btn {$isCollectionNew ? 'bg-success border-0 hover:bg-error' : ''}"
+      class="btn {$isCollectionNew ? 'bg-success border-0 hover:bg-success' : ''}"
       on:mousedown={() => changeMode()}>New collection</button
     >
     <button
-      class="btn {!$isCollectionNew ? 'bg-success border-0 hover:bg-error' : ''}"
+      class="btn {!$isCollectionNew ? 'bg-success border-0 hover:bg-success' : ''}"
       on:mousedown={() => changeMode()}>Add to existing</button
     >
   </div>
@@ -68,6 +68,8 @@
   {/if}
 </div>
 
-<div class="flex mt-5 justify-center">
-  <a href="/app/create/add"><button class="btn"> Next </button></a>
-</div>
+{#if $collectionName.length > 0}
+  <div class="flex mt-5 justify-center">
+    <a href="/app/create/add"><button class="btn"> Next </button></a>
+  </div>
+{/if}

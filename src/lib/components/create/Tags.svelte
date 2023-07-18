@@ -49,7 +49,7 @@
     </form>
   </div>
 
-  <div class="text-error-content m-2">{tagWarning}</div>
+  <div class="text-error-content m-3">{tagWarning}</div>
 
   <div class="flex flex-wrap">
     {#each $tags as tag}
