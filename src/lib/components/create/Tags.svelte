@@ -41,7 +41,7 @@
     <form method="POST" on:submit|preventDefault={addTag}>
       <input
         type="text"
-        placeholder="Tags"
+        placeholder="Add optional tags"
         class="input input-bordered w-full"
         on:keypress={handleKeydown}
         bind:value={currentTag}

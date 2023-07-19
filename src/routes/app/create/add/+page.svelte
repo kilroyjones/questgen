@@ -160,7 +160,9 @@
 
   {#if $stagedContentInfo.length > 0}
     <div class="flex">
-      <a href="/app/create/parameters"><button class="btn"> Next </button></a>
+      <a href="/app/create/parameters" data-sveltekit-preload-data="tap"
+        ><button class="btn"> Next </button></a
+      >
     </div>
   {/if}
 </div>

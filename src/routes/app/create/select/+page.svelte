@@ -17,10 +17,8 @@
 
   function handleCollectionChange(event: any) {
     const id = event.target.value;
-    console.log("Here: ", collections);
     for (let i = 0; i < collections.length; i++) {
       if (collections[i].id == id) {
-        console.log("2Here");
         $collectionID = collections[i].id;
         $collectionName = collections[i].name;
       }
@@ -70,6 +68,8 @@
 
 {#if $collectionName.length > 0}
   <div class="flex mt-5 justify-center">
-    <a href="/app/create/add"><button class="btn"> Next </button></a>
+    <a href="/app/create/add" data-sveltekit-preload-data="tap"
+      ><button class="btn"> Next </button></a
+    >
   </div>
 {/if}

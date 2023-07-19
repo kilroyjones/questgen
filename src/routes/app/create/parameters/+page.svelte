@@ -1,16 +1,15 @@
 <script lang="ts">
   import SourceDetails from "$lib/components/create/SourceDetails.svelte";
   import Tags from "$lib/components/create/Tags.svelte";
-  import { collectionName } from "$lib/stores/create";
+  import { collectionName, questionCount } from "$lib/stores/create";
 
-  let questionCount: number = 20;
   let options = Array.from({ length: 10 }, (_, i) => 5 * (i + 1));
   let selectedOption = options[3]; // Default selection
 
   // Function to handle option selection
   function selectOption(option: number) {
     selectedOption = option;
-    questionCount = option;
+    $questionCount = option;
   }
 </script>
 
@@ -30,14 +29,14 @@
       type="number"
       min="1"
       max="999"
-      bind:value={questionCount}
+      bind:value={$questionCount}
     />
   </div>
 
   <div>
     {#each options as option (option)}
       <button
-        class="w-10 text-center m-1 p-2 bg-primary rounded-md {selectedOption === option
+        class="w-10 text-center font-bold m-1 p-2 bg-primary rounded-md {selectedOption === option
           ? 'bg-base-content text-white'
           : ''}"
         on:click={() => selectOption(option)}
@@ -54,10 +53,14 @@
 
 <div class="flex justify-center mt-5">
   <div class="flex mr-3">
-    <a href="/app/create/add"><button class="btn"> Back </button></a>
+    <a href="/app/create/add" data-sveltekit-preload-data="tap"
+      ><button class="btn"> Back </button></a
+    >
   </div>
 
   <div class="flex mr-3">
-    <a href="/app/create/process"><button class="btn"> Generate </button></a>
+    <a href="/app/create/generate" data-sveltekit-preload-data="tap"
+      ><button class="btn"> Generate </button></a
+    >
   </div>
 </div>

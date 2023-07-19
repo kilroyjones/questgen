@@ -17,7 +17,6 @@ export const POST: RequestHandler = async ({ request }) => {
       },
     },
   });
-  console.log(collections);
 
   return new Response(JSON.stringify(collections));
 };
