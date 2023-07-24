@@ -1,19 +1,60 @@
 <script lang="ts">
-  import { collectionName } from "$lib/stores/create";
+  import Generating from "$lib/components/create/Generating.svelte";
+  import Parameters from "$lib/components/create/Parameters.svelte";
+  import {
+    collectionName,
+    questionCount,
+    stagedContentInfo,
+    tags,
+    resetCreate,
+  } from "$lib/stores/create";
+
+  let options: Array<number> = Array.from({ length: 10 }, (_, i) => 5 * (i + 1));
+  let selectedOption: number = options[3]; // Default selection
+  let isGenerating: boolean = false;
+
+  $questionCount = options[3];
+
+  /**
+   *
+   */
+  function selectOption(option: number) {
+    selectedOption = option;
+    $questionCount = option;
+  }
+
+  /**
+   *
+   */
+  async function generate() {
+    let content = await Object.values($stagedContentInfo).reduce(
+      (acc, value) => acc + "\n" + value.content,
+      ""
+    );
+
+    if ($stagedContentInfo.length > 0 && $questionCount > 0) {
+      // TODO: Add error handling for all other variables to make sure everything is being submitted.
+      // Provide feedback on the processing page.
+      fetch("http://localhost:5173/api/collections/create", {
+        method: "POST",
+        body: JSON.stringify({
+          name: $collectionName,
+          content: content,
+          tags: $tags,
+          questionCount: $questionCount,
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      resetCreate();
+      isGenerating = true;
+    }
+  }
 </script>
 
-<div class="flex flex-col justify-center mt-5">
-  <div class="text-center text-lg mb-2">
-    <p>
-      Your request to create the collection <span class="text-primary font-bold"
-        >{$collectionName}</span
-      > is being processed.
-    </p>
-  </div>
-  <div class="text-center text-lg">
-    Depending on the number of questions requested, this could take upwards of a few minutes. You
-    can check it's status on your <a href="/app/collections" class="link text-primary font-bold">
-      Collections</a
-    > page.
-  </div>
-</div>
+{#if isGenerating}
+  <Generating />
+{:else}
+  <Parameters {selectedOption} {selectOption} {options} {generate} />
+{/if}

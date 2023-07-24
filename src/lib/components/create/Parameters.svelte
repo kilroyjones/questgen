@@ -3,14 +3,10 @@
   import Tags from "$lib/components/create/Tags.svelte";
   import { collectionName, questionCount } from "$lib/stores/create";
 
-  let options = Array.from({ length: 10 }, (_, i) => 5 * (i + 1));
-  let selectedOption = options[3]; // Default selection
-
-  // Function to handle option selection
-  function selectOption(option: number) {
-    selectedOption = option;
-    $questionCount = option;
-  }
+  export let selectedOption: number;
+  export let selectOption: Function;
+  export let options: Array<number>;
+  export let generate: Function;
 </script>
 
 <div class="flex-row">
@@ -53,14 +49,12 @@
 
 <div class="flex justify-center mt-5">
   <div class="flex mr-3">
-    <a href="/app/create/add" data-sveltekit-preload-data="tap"
-      ><button class="btn"> Back </button></a
-    >
+    <a href="/app/create/add" class="btn" data-sveltekit-preload-data="tap">Back</a>
   </div>
 
   <div class="flex mr-3">
-    <a href="/app/create/generate" data-sveltekit-preload-data="tap"
-      ><button class="btn"> Generate </button></a
+    <button class="btn" data-sveltekit-preload-data="tap" on:click={() => generate()}
+      >Generate</button
     >
   </div>
 </div>

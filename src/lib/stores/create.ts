@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { ContentInfo } from "$lib/models";
 
@@ -22,7 +22,6 @@ export const stagedContentInfo = writable<Array<ContentInfo>>([
     content:
       "In May 1974, Vint Cerf and Bob Kahn described an internetworking protocol for sharing resources using packet switching among network nodes.[1] The authors had been working with Gérard Le Lann to incorporate concepts from the French CYCLADES project into the new network.[2] The specification of the resulting protocol, RFC 675 (Specification of Internet Transmission Control Program), was written by Vint Cerf, Yogen Dalal, and Carl Sunshine, and published in December 1974. It contains the first attested use of the term internet, as a shorthand for internetwork.[3]",
     type: 1,
-
     tokenCount: 100,
   },
 ]);

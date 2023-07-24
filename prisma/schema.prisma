@@ -38,6 +38,7 @@ model Collection {
   id Int @id @default(autoincrement())
   userId String 
   name String
+  count Int
   questions MultipleChoiceQuestion [] 
   tags Tag[]
 }

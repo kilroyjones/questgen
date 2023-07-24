@@ -1,13 +1,23 @@
-export async function parseQuestions(content: string): Promise<Array<Object>> {
-  let questions: Array<object> = [];
+export type QuestionAndAnswers = {
+  question: string;
+  answers: Array<string>;
+};
 
+export async function getQuestionAndAnswers(content: string): Promise<Array<QuestionAndAnswers>> {
   let rows = content.split("\n");
+  let questionAndAnswers: Array<QuestionAndAnswers> = [];
+
   for (let i = 1; i < rows.length; i++) {
     let row = rows[i].split("\t");
-    console.log(row);
+    if (row.length > 2) {
+      let questionAndAnswer: QuestionAndAnswers = {
+        question: row[0],
+        answers: row.slice(1),
+      };
+      questionAndAnswers.push(questionAndAnswer);
+    }
   }
-
-  return questions;
+  return questionAndAnswers;
 }
 
 export async function parseTags(tags: Array<string>): Promise<Array<any>> {
@@ -19,7 +29,7 @@ export async function parseTags(tags: Array<string>): Promise<Array<any>> {
   return arr;
 }
 
-export async function parseAnswers(answers: Array<string>): Promise<Array<any>> {
+export function parseAnswers(answers: Array<string>): Array<any> {
   let arr = [];
   let isCorrect = true;
   for (let i = 1; i < answers.length; i++) {
