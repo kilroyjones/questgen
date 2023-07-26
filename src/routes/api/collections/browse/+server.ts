@@ -10,6 +10,9 @@ export const POST: RequestHandler = async ({ request }) => {
     where: {
       userId: data.userId,
     },
+    orderBy: {
+      id: "desc",
+    },
     include: {
       tags: true,
       _count: {
@@ -17,6 +20,7 @@ export const POST: RequestHandler = async ({ request }) => {
       },
     },
   });
+  // TODO: Handle Error
 
   return new Response(JSON.stringify(collections));
 };

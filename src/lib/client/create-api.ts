@@ -18,5 +18,3 @@ export async function createQuestions(
     },
   });
 }
-
-export async function getCollections();

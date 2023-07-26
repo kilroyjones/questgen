@@ -39,6 +39,7 @@ model Collection {
   userId String 
   name String
   count Int
+  processing Int 
   questions MultipleChoiceQuestion [] 
   tags Tag[]
 }

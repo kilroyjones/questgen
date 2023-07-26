@@ -1,8 +1,5 @@
 import type { QuestionStatus } from "$lib/models";
-import type {
-  MultipleChoiceQuestion,
-  MultipleChoiceAnswer,
-} from "@prisma/client";
+import type { MultipleChoiceQuestion, MultipleChoiceAnswer } from "@prisma/client";
 
 export async function getCollections(userId: string) {
   return await fetch("http://localhost:5173/api/collections/browse", {
@@ -37,11 +34,13 @@ export async function getQuestion(
 export async function deleteQuestions(
   questions: Array<MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }>
 ) {
-  let ids = questions.map((question) => question.id);
+  // TODO: Handle errors
+  let ids = questions.map(question => question.id);
   return await fetch("http://localhost:5173/api/question/delete", {
     method: "DELETE",
     body: JSON.stringify({
       ids: ids,
+      collectionId: questions[0].collectionId,
     }),
     headers: {
       "content-type": "application/json",

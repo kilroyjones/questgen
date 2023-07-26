@@ -1,15 +1,17 @@
 <script lang="ts">
+  // Components
   import AiOutlineDelete from "svelte-icons-pack/ai/AiOutlineDelete";
   import Icon from "svelte-icons-pack/Icon.svelte";
 
-  import type {
-    MultipleChoiceAnswer,
-    MultipleChoiceQuestion,
-  } from "@prisma/client";
+  // Types
+  import type { MultipleChoiceAnswer, MultipleChoiceQuestion } from "@prisma/client";
 
   export let handleDeleteQuestion: Function;
-  export let question:
-    | MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] };
+  // export let handleConfirmDeleteQuestion: Function;
+  export let question: MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] };
+
+  let showEditModal: boolean = false;
+  let confirmDelete: HTMLDialogElement;
 </script>
 
 <div class="flex justify-between">
