@@ -77,7 +77,7 @@ async function createCollection(
         userId: id,
         name: name,
         count: 0,
-        processing: 0,
+        processing: 1,
         tags: {
           create: formattedTags,
         },
@@ -220,7 +220,7 @@ async function updateCollectionInfo(collectionId: number) {
 
     await prisma.collection.update({
       where: { id: collectionId },
-      data: { count: count, processing: 1 },
+      data: { count: count, processing: 0 },
     });
   } catch (error) {
     logger.error(

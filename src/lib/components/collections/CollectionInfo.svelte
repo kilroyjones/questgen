@@ -1,15 +1,28 @@
 <script lang="ts">
   import type { Collection, Tag } from "@prisma/client";
+  import TiExport from "svelte-icons-pack/ti/TiExport";
+  import Icon from "svelte-icons-pack/Icon.svelte";
 
   export let collection: Collection & { tags: Array<Tag> };
 </script>
 
-<div class="flex flex-col text-3xl font-bold mb-0">
-  {collection.name}
+<div class="flex flex-row justify-between">
+  <div class="flex w-full flex-col">
+    <div class="text-3xl font-bold mb-0">
+      {collection.name}
+    </div>
+    <div class="mb-2 text-sm font-bold">
+      Questions: {collection.count}
+    </div>
+  </div>
+  <a href="/app/collection/export" title="Export">
+    <div class="flex font-bold text-lg">
+      <div>Export</div>
+      <div><Icon size="28" src={TiExport} /></div>
+    </div>
+  </a>
 </div>
-<div class="flex mb-2 text-sm font-bold">
-  Questions: {collection.count}
-</div>
+
 <div class="flex flex-wrap">
   <div class="flex flex-row mb-3">
     {#each collection.tags as tag}

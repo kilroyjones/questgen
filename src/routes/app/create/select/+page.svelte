@@ -47,11 +47,13 @@
 
 <div class="flex justify-center mt-4">
   {#if $isCollectionNew}
-    <input
-      class="input border-gray-300 border-2 min-w-[75%]"
-      placeholder="Enter collection name"
-      bind:value={$collectionName}
-    />
+    <form method="submit" action="/app/create/add">
+      <input
+        class="input border-gray-300 border-2 min-w-[75%]"
+        placeholder="Enter collection name"
+        bind:value={$collectionName}
+      />
+    </form>
   {:else}
     <select class="select border-2 min-w-[75%] border-gray-400" on:change={handleCollectionChange}>
       <option class="" disabled selected>Select collection</option>
