@@ -9,8 +9,8 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
-      <li><a href="/app/create/select">Create</a></li>
-      <li><a href="/app/collections">Collections</a></li>
+      <li><a href="/app/collection/create/select">Create</a></li>
+      <li><a href="/app/collection">Collections</a></li>
       <li />
       {#if isLoggedIn}
         <li><a href="/app/account/signout">{username}</a></li>

@@ -1,15 +1,14 @@
-import { error } from "@sveltejs/kit";
 import { PrismaClient } from "@prisma/client";
+import type { PageServerLoad } from "./$types";
 
 const prisma = new PrismaClient();
-
-import type { PageServerLoad } from "./$types";
-import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ params, locals, depends }) => {
   // Assume getting all collections
   // TODO: Add handle for getting a specific collection?
-  depends("collections:refresh-on-delete");
+  // TODO: Move to API ???
+  // TODO: Maybe change this to findFirst and insert the userId from session
+  depends("collection:refresh-on-delete");
   console.log("GETTING COLLEC");
   let collection = await prisma.collection.findUnique({
     where: {
@@ -25,5 +24,5 @@ export const load: PageServerLoad = async ({ params, locals, depends }) => {
     },
   });
   console.log(collection);
-  return { "collection": collection };
+  return { collection: collection };
 };

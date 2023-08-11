@@ -5,7 +5,7 @@
 </script>
 
 <div class="card bg-base-100 shadow-xl hover:bg-gray-100 cursor-pointer mb-3">
-  <a href="/app/collections/{collection.id}">
+  <a href="/app/collection/{collection.id}">
     <div class="card-body p-4">
       <h2 class="card-title">
         <!-- TODO: Change this to work with account ID if need be -->

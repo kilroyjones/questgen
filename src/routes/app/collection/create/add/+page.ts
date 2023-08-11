@@ -5,7 +5,7 @@ import { get } from "svelte/store";
 
 export const load = (({ params }) => {
   if (get(collectionName) == "") {
-    throw redirect(307, "/app/create/select");
+    throw redirect(307, "/app/collection/create/select");
   }
 
   return {};

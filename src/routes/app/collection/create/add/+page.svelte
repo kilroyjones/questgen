@@ -1,8 +1,8 @@
 <script lang="ts">
   // Components
-  import Source from "$lib/components/create/Source.svelte";
-  import SourceDetails from "$lib/components/create/SourceDetails.svelte";
-  import SourceSelection from "$lib/components/create/SourceSelection.svelte";
+  import Source from "$lib/components/collection/create/Source.svelte";
+  import SourceDetails from "$lib/components/collection/create/SourceDetails.svelte";
+  import SourceSelection from "$lib/components/collection/create/SourceSelection.svelte";
 
   // Functions
   import { createQuestions } from "$lib/client/create-api";
@@ -155,12 +155,12 @@
 
 <div class="flex justify-center mt-5">
   <div class="flex mr-3">
-    <a href="/app/create/select"><button class="btn"> Back </button></a>
+    <a href="/app/collection/create/select"><button class="btn"> Back </button></a>
   </div>
 
   {#if $stagedContentInfo.length > 0}
     <div class="flex">
-      <a href="/app/create/generate" data-sveltekit-preload-data="tap"
+      <a href="/app/collection/create/generate" data-sveltekit-preload-data="tap"
         ><button class="btn"> Next </button></a
       >
     </div>

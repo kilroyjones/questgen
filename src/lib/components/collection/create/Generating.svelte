@@ -13,7 +13,7 @@
   <div class="text-center text-lg">
     Depending on the number of questions requested, this could take upwards of a few minutes. You
     can wait here until it's finished processing or check the <a
-      href="/app/collections"
+      href="/app/collection"
       class="link text-primary font-bold"
     >
       Collections</a

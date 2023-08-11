@@ -1,6 +1,6 @@
 <script lang="ts">
-  import SourceDetails from "$lib/components/create/SourceDetails.svelte";
-  import Tags from "$lib/components/create/Tags.svelte";
+  import SourceDetails from "$lib/components/collection/create/SourceDetails.svelte";
+  import Tags from "$lib/components/collection/create/Tags.svelte";
   import { collectionName, questionCount } from "$lib/stores/create";
 
   export let selectedOption: number;
@@ -49,7 +49,7 @@
 
 <div class="flex justify-center mt-5">
   <div class="flex mr-3">
-    <a href="/app/create/add" class="btn" data-sveltekit-preload-data="tap">Back</a>
+    <a href="/app/collection/create/add" class="btn" data-sveltekit-preload-data="tap">Back</a>
   </div>
 
   <div class="flex mr-3">

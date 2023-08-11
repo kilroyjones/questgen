@@ -10,7 +10,7 @@
   bind:this={confirmDeleteDialog}
   on:click|self={() => confirmDeleteDialog.close()}
   on:keydown|self={() => confirmDeleteDialog.close()}
-  on:close={() => (showEditModal = false)}
+  on:close={() => (showConfirmDeleteQuestionModal = false)}
 >
   <div class="flex justify-center">
     <h3 class="font-bold text-lg">Delete question?</h3>
@@ -21,7 +21,7 @@
     <button
       class="btn"
       on:click={() => {
-        showEditModel = false;
+        showConfirmDeleteQuestionModal = false;
       }}>No</button
     >
   </div>

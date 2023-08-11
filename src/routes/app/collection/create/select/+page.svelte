@@ -70,6 +70,6 @@
 
 {#if $collectionName.length > 0}
   <div class="flex mt-5 justify-center">
-    <a href="/app/create/add" class="btn" data-sveltekit-preload-data="tap">Next</a>
+    <a href="/app/collection/create/add" class="btn" data-sveltekit-preload-data="tap">Next</a>
   </div>
 {/if}

@@ -5,11 +5,11 @@ import { get } from "svelte/store";
 
 export const load = (({ params }) => {
   if (get(collectionName) == "") {
-    throw redirect(307, "/app/create/select");
+    throw redirect(307, "/app/collection/create/select");
   }
 
   if (get(stagedContentInfo).length == 0) {
-    throw redirect(307, "/app/create/add");
+    throw redirect(307, "/app/collection/create/add");
   }
   return {};
 }) satisfies PageLoad;

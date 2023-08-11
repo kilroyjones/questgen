@@ -1,8 +1,8 @@
 <script lang="ts">
   // Components
-  import QuestionWrapper from "$lib/components/collections/QuestionWrapper.svelte";
-  import CollectionInfo from "$lib/components/collections/CollectionInfo.svelte";
-  import CollectionControls from "$lib/components/collections/CollectionControls.svelte";
+  import QuestionWrapper from "$lib/components/collection/QuestionWrapper.svelte";
+  import CollectionInfo from "$lib/components/collection/CollectionInfo.svelte";
+  import CollectionControls from "$lib/components/collection/CollectionControls.svelte";
 
   // Types
   import type {

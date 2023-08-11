@@ -15,7 +15,7 @@
       Questions: {collection.count}
     </div>
   </div>
-  <a href="/app/collection/export" title="Export">
+  <a href="/app/collection/export/{collection.id}" title="Export">
     <div class="flex font-bold text-lg">
       <div>Export</div>
       <div><Icon size="28" src={TiExport} /></div>

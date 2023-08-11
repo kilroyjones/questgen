@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Collection, Tag } from "@prisma/client";
-  import CollectionComponent from "$lib/components/collections/Collection.svelte";
+  import CollectionComponent from "$lib/components/collection/Collection.svelte";
 
   export let data;
 

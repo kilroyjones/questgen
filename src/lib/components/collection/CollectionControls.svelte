@@ -17,7 +17,7 @@
       let response: Response = await deleteQuestions(selectedQuestions);
       let result = await response.json();
       if (result.status == "success") {
-        await invalidate("collections:refresh-on-delete");
+        await invalidate("collection:refresh-on-delete");
       }
     }
   }
