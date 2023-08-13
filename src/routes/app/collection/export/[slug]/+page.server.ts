@@ -15,9 +15,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       },
       include: {
         tags: true,
+        questions: {
+          include: {
+            answers: true,
+          },
+        },
       },
     });
-    console.log(collection);
     return { collection: collection };
   }
   throw error(404, "Not found");
