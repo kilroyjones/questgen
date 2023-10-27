@@ -12,5 +12,4 @@ fi
 
 docker run -d -p 5432:5432 --name qb-container -e POSTGRES_PASSWORD=password postgres
 
-npx prisma db generate
 npx prisma db push

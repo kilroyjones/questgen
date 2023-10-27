@@ -51,7 +51,7 @@
   }
 
   .processing-animation::before {
-    content: "Processing .....";
+    content: "Processing...";
     animation: processing 2s infinite; /* 2s is the duration; adjust as needed */
   }
 </style>
