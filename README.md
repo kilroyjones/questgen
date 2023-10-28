@@ -8,26 +8,27 @@ What I wanted was to be able to upload a PDF or paste in text and have it create
 
 The Docker setup is the development version using Supabase for authentication. I am only using Google Auth at the moment, and haven’t set it up for email auth or local use, but plan to do that in the near future.
 Here are the current features:
-[x] Social auth via Google (Supabase)
-[x] Question creation from PDF and text
-[x] Can handle multiple files
-[x] Organizing questions by collection
-[x] Generating more questions for existing collections
-[x] Add tags to collections
-[x] Edit question content
-[x] Export to spreadsheet for use in Quizizz
+
+- [x] Social auth via Google (Supabase)
+- [x] Question creation from PDF and text
+- [x] Can handle multiple files
+- [x] Organizing questions by collection
+- [x] Generating more questions for existing collections
+- [x] Add tags to collections
+- [x] Edit question content
+- [x] Export to spreadsheet for use in Quizizz
 
 # To do
 
-[ ] Export for Kahoot
-[ ] Export for Gimkit
-[ ] Export for Blooket
-[ ] Moving questions between Collections
-[ ] Registration using email
-[ ] Toggle for using OpenAI’s ChatGPT-4.0 as well as other models
-[ ] Dark mode
-[ ] Providing real-time feedback on question creation
-[ ] Allowing rerun if creation fails
+- [ ] Export for Kahoot
+- [ ] Export for Gimkit
+- [ ] Export for Blooket
+- [ ] Moving questions between Collections
+- [ ] Registration using email
+- [ ] Toggle for using OpenAI’s ChatGPT-4.0 as well as other models
+- [ ] Dark mode
+- [ ] Providing real-time feedback on question creation
+- [ ] Allowing rerun if creation fails
 
 There are other, long-term features I’d like to add, but this has really been an experiment for me in playing with Supabase and using Tailwind. I’m still deciding how much time I’d like to spend on this going forward.
 
