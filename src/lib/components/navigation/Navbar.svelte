@@ -5,23 +5,23 @@
 
 <div class="navbar bg-base-100">
   <div class="flex-1">
-    <a class="btn btn-ghost normal-case text-xl" href="/">questionBuilder</a>
+    <a class="btn btn-ghost normal-case text-xl" href="/">Question Builder</a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
-      <li><a href="/app/collection/create/select">Create</a></li>
-      <li><a href="/app/collection">Collections</a></li>
+      <li><a class="font-bold" href="/app/collection/create/select">Create</a></li>
+      <li><a class="font-bold" href="/app/collection">Collections</a></li>
       <li />
       {#if isLoggedIn}
-        <li><a href="/app/account/signout">{username}</a></li>
+        <li><a class="font-bold" href="/app/collection">{username}</a></li>
         <li>
           <form action="/app/account/signout" method="POST">
-            <button type="submit">Sign out</button>
+            <button class="font-bold text-primary" type="submit">Sign out</button>
           </form>
         </li>
       {:else}
         <li>
-          <a href="/app/account/signin">Sign in</a>
+          <a class="font-bold text-primary" href="/app/account/signin">Sign in</a>
         </li>
       {/if}
     </ul>

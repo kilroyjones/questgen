@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: .
+    ports:
+      - "5173:5173"
+    environment:
+      PRIVATE_OPENAI_KEY: ${PRIVATE_OPENAI_KEY}
+      PUBLIC_SUPABASE_URL: ${PUBLIC_SUPABASE_URL}
+      PUBLIC_SUPABASE_ANON_KEY: ${PUBLIC_SUPABASE_ANON_KEY}
+      DATABASE_URL: postgresql://postgres:password@db:5432/question-builder
+    depends_on:
+      - db
+    command: /bin/sh -c "npm install && npx prisma generate && npx prisma db push && npm run dev"
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: question-builder
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
