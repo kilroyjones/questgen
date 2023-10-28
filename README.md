@@ -40,10 +40,7 @@ Setup is as easy as cloning the repo and using **docker-compose up** to build an
 
 This project uses [SvelteKit](https://kit.svelte.dev/), [Tailwind](https://tailwindcss.com/) and [Supabase](https://supabase.com/).
 
-—
+---
+
 This source code is licensed under the GPL style license found in the
 LICENSE file in the root directory of this source tree.
-
-# Motivation
-
-I started
