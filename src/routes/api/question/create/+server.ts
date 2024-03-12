@@ -37,8 +37,7 @@ export const POST: RequestHandler = async ({ request }) => {
   }
 
   let content = result.data.content;
-  let questions = await parseQuestions(content);
-
+  let questions: any = await parseQuestions(content);
   let tags = await parseTags(data.tags);
 
   let collection = await createCollection(data.collectionName, data.userId, tags);

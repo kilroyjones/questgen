@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import SiKahoot from "svelte-icons-pack/si/SiKahoot";
-  import Icon from "svelte-icons-pack/Icon.svelte";
   import { goto } from "$app/navigation";
 
   import type {

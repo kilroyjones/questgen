@@ -69,3 +69,8 @@ export type ContentInfo = {
   type: number;
   tokenCount: number;
 };
+
+export type Result = {
+  status: string;
+  data: any;
+};
