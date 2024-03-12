@@ -27,28 +27,25 @@ export const POST: RequestHandler = async ({ request }) => {
   let result: Result;
 
   if (!data) {
-    console.log("ERROR: ");
     return new Response(JSON.stringify({ status: "error" }));
   }
 
   result = await getAPIResult(data.content);
-  console.log(result);
 
   if (result.status == "error") {
-    console.log(result);
     return new Response(JSON.stringify({ status: "error" }));
   }
 
   let content = result.data.content;
   let questions = await parseQuestions(content);
-  console.log(questions);
+
   let tags = await parseTags(data.tags);
-  console.log(tags);
+
   let collection = await createCollection(data.collectionName, data.userId, tags);
   if (collection) {
     result = await addQuestionsToCollection(userId, questions, collection.id);
   }
-  console.log(result);
+
   if (result.status == "success") {
     return new Response(JSON.stringify({ status: "success" }));
   }

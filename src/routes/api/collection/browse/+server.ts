@@ -20,6 +20,7 @@ export const POST: RequestHandler = async ({ request }) => {
       },
     },
   });
+
   // TODO: Handle Error
 
   return new Response(JSON.stringify(collections));

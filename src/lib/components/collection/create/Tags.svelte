@@ -29,7 +29,6 @@
 
   // TODO: fix this shit because it can't detect backspace?
   function handleKeydown(event: KeyboardEvent) {
-    console.log(event);
     if (event.key != "Enter") {
       tagWarning = "";
     }

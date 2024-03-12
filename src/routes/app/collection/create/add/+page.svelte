@@ -71,7 +71,7 @@
       rejectedContentInfo = rejectedContentInfo;
       $tokenTotal = $stagedContentInfo.reduce((tokens, file) => tokens + file.tokenCount, 0);
       $estimatedQueries = Math.round($tokenTotal / 3000);
-      console.log("FSDAF", $tokenTotal, $estimatedQueries);
+
       isStagingFiles = false;
     }
   }

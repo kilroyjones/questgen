@@ -26,9 +26,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     return new Response("");
   }
 
-  console.log("Session found");
   let req = await request.json();
-  console.log(req.tags);
   let collection = await createCollection(session.user.id, req.name, req.tags);
 
   if (!collection) {
@@ -36,28 +34,21 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     return new Response("");
   }
 
-  console.log("Collection created: ", collection.id);
-
   let questionAndAnswers = await generateQuestions(req.content, req.questionCount);
   if (!questionAndAnswers) {
     // TODO: Handle Error
     return new Response("");
   }
 
-  console.log("Questions generated:", questionAndAnswers.length);
-
-  let result = await addQuestionsToCollection(
+  await addQuestionsToCollection(
     session.user.id,
     collection.id,
     questionAndAnswers,
     req.questionCount
   );
 
-  console.log("Questions added to database:", result);
-
   await updateCollectionInfo(collection.id);
 
-  console.log("Updated the collection count");
   // Handle Error Response
   return new Response("");
 };
@@ -109,7 +100,7 @@ async function generateQuestions(
     );
     if (result) {
       let newQuestionAndAnswers: Array<QuestionAndAnswers> = await getQuestionAndAnswers(result);
-      console.log("GPT:", newQuestionAndAnswers.length);
+
       if (newQuestionAndAnswers.length > 0) {
         questionAndAnswers = questionAndAnswers.concat(newQuestionAndAnswers);
       } else {

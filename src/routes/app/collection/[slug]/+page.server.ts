@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params, locals, depends }) => {
   // TODO: Move to API ???
   // TODO: Maybe change this to findFirst and insert the userId from session
   depends("collection:refresh-on-delete");
-  console.log("GETTING COLLEC");
+
   let collection = await prisma.collection.findUnique({
     where: {
       id: parseInt(params.slug),
@@ -23,6 +23,6 @@ export const load: PageServerLoad = async ({ params, locals, depends }) => {
       tags: true,
     },
   });
-  console.log(collection);
+
   return { collection: collection };
 };

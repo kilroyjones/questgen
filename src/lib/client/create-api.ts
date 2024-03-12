@@ -1,3 +1,5 @@
+import { PUBLIC_ADDRESS } from "$env/static/public";
+
 /**
  * API call to create questions
  */
@@ -6,7 +8,7 @@ export async function createQuestions(
   tags: Array<string>,
   content: string
 ) {
-  return await fetch("http://localhost:5173/api/question/create", {
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/create`, {
     method: "POST",
     body: JSON.stringify({
       collectionName: collectionName,

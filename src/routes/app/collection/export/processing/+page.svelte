@@ -1,12 +1,13 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { onMount } from "svelte";
+  import { PUBLIC_ADDRESS } from "$env/static/public";
 
   let processing: Boolean = true;
   let error: String | null = null;
 
   async function process(service: String, collectionId: number) {
-    let resp = await fetch("http://localhost:5173/api/collection/export", {
+    let resp = await fetch(`${PUBLIC_ADDRESS}/api/collection/export`, {
       method: "POST",
       body: JSON.stringify({
         service: service,

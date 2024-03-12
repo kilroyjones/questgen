@@ -1,6 +1,7 @@
 <script lang="ts">
   import Generating from "$lib/components/collection/create/Generating.svelte";
   import Parameters from "$lib/components/collection/create/Parameters.svelte";
+  import { PUBLIC_ADDRESS } from "$env/static/public";
   import {
     collectionName,
     questionCount,
@@ -35,7 +36,7 @@
     if ($stagedContentInfo.length > 0 && $questionCount > 0) {
       // TODO: Add error handling for all other variables to make sure everything is being submitted.
       // Provide feedback on the processing page.
-      fetch("http://localhost:5173/api/collection/create", {
+      fetch(`${PUBLIC_ADDRESS}/api/collection/create`, {
         method: "POST",
         body: JSON.stringify({
           name: $collectionName,

@@ -1,10 +1,11 @@
-import type { PageServerLoad } from "./$types";
+import { PUBLIC_ADDRESS } from "$env/static/public";
 import { redirect } from "@sveltejs/kit";
 
+import type { PageServerLoad } from "./$types";
 export const load: PageServerLoad = async ({ locals }) => {
   const session = await locals.getSession();
   if (session) {
-    let resp = await fetch("http://localhost:5173/api/collection/browse", {
+    let resp = await fetch(`${PUBLIC_ADDRESS}/api/collection/browse`, {
       method: "POST",
       body: JSON.stringify({
         userId: session.user.id,

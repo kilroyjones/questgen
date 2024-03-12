@@ -4,7 +4,6 @@ export async function parseQuestions(content: string): Promise<Array<Object>> {
   let rows = content.split("\n");
   for (let i = 1; i < rows.length; i++) {
     let row = rows[i].split("\t");
-    console.log(row);
   }
 
   return questions;

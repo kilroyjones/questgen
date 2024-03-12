@@ -1,10 +1,8 @@
-import type {
-  MultipleChoiceQuestionWithAnswers,
-  QuestionStatus,
-} from "$lib/models";
+import { PUBLIC_ADDRESS } from "$env/static/public";
+import type { MultipleChoiceQuestionWithAnswers, QuestionStatus } from "$lib/models";
 
 export async function getCollections(userId: string) {
-  return await fetch("http://localhost:5173/api/collections/browse", {
+  return await fetch("${PUBLIC_ADDRESS}/api/collections/browse", {
     method: "POST",
     body: JSON.stringify({
       userId: userId,
@@ -20,7 +18,7 @@ export async function getQuestion(
   questionStatus: QuestionStatus,
   collectionId: number
 ) {
-  return await fetch("http://localhost:5173/api/question/get", {
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/get`, {
     method: "POST",
     body: JSON.stringify({
       userId: userId,
@@ -33,10 +31,8 @@ export async function getQuestion(
   });
 }
 
-export async function deleteQuestion(
-  question: MultipleChoiceQuestionWithAnswers
-) {
-  return await fetch("http://localhost:5173/api/question/delete", {
+export async function deleteQuestion(question: MultipleChoiceQuestionWithAnswers) {
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/delete`, {
     method: "DELETE",
     body: JSON.stringify({ id: question.id }),
     headers: {
@@ -48,8 +44,8 @@ export async function deleteQuestion(
 export async function deleteQuestions(
   questions: Array<MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }>
 ) {
-  let ids = questions.map((question) => question.id);
-  return await fetch("http://localhost:5173/api/question/delete", {
+  let ids = questions.map(question => question.id);
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/delete`, {
     method: "DELETE",
     body: JSON.stringify({
       ids: ids,
@@ -60,10 +56,8 @@ export async function deleteQuestions(
   });
 }
 
-export async function updateQuestion(
-  question: MultipleChoiceQuestionWithAnswers
-) {
-  let resp = await fetch("http://localhost:5173/api/question/update", {
+export async function updateQuestion(question: MultipleChoiceQuestionWithAnswers) {
+  let resp = await fetch(`${PUBLIC_ADDRESS}/api/question/update`, {
     method: "POST",
     body: JSON.stringify(question),
     headers: {
@@ -72,10 +66,8 @@ export async function updateQuestion(
   });
 }
 
-export async function approveQuestion(
-  question: MultipleChoiceQuestionWithAnswers
-) {
-  return await fetch("http://localhost:5173/api/question/approve", {
+export async function approveQuestion(question: MultipleChoiceQuestionWithAnswers) {
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/approve`, {
     method: "POST",
     body: JSON.stringify(question),
     headers: {

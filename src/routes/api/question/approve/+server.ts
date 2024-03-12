@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ request }) => {
   let req = await request.json();
-  console.log("--------------");
+
   let question = await prisma.multipleChoiceQuestion.update({
     where: {
       id: req.id,

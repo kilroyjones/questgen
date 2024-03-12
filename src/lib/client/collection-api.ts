@@ -1,8 +1,10 @@
+import { PUBLIC_ADDRESS } from "$env/static/public";
+
 import type { QuestionStatus } from "$lib/models";
 import type { MultipleChoiceQuestion, MultipleChoiceAnswer } from "@prisma/client";
 
 export async function getCollections(userId: string) {
-  return await fetch("http://localhost:5173/api/collections/browse", {
+  return await fetch(`${PUBLIC_ADDRESS}/api/collections/browse`, {
     method: "POST",
     body: JSON.stringify({
       userId: userId,
@@ -18,7 +20,7 @@ export async function getQuestion(
   questionStatus: QuestionStatus,
   collectionId: number
 ) {
-  return await fetch("http://localhost:5173/api/question/get", {
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/get`, {
     method: "POST",
     body: JSON.stringify({
       userId: userId,
@@ -36,7 +38,7 @@ export async function deleteQuestions(
 ) {
   // TODO: Handle errors
   let ids = questions.map(question => question.id);
-  return await fetch("http://localhost:5173/api/question/delete", {
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/delete`, {
     method: "DELETE",
     body: JSON.stringify({
       ids: ids,
@@ -51,7 +53,7 @@ export async function deleteQuestions(
 export async function updateQuestion(
   question: MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }
 ) {
-  let resp = await fetch("http://localhost:5173/api/question/update", {
+  let resp = await fetch(`${PUBLIC_ADDRESS}/api/question/update`, {
     method: "POST",
     body: JSON.stringify(question),
     headers: {
@@ -63,7 +65,7 @@ export async function updateQuestion(
 export async function approveQuestion(
   question: MultipleChoiceQuestion & { answers: MultipleChoiceAnswer[] }
 ) {
-  return await fetch("http://localhost:5173/api/question/approve", {
+  return await fetch(`${PUBLIC_ADDRESS}/api/question/approve`, {
     method: "POST",
     body: JSON.stringify(question),
     headers: {

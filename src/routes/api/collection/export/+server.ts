@@ -12,7 +12,6 @@ export const POST: RequestHandler = async ({ locals, request }) => {
   const session = await locals.getSession();
 
   if (session && data.collectionId && data.service) {
-    console.log(session.user.id, data.service, data.collectionId);
     let collection = await getCollection(session.user.id, data.collectionId);
 
     //TODO: handle error
@@ -55,6 +54,7 @@ async function processQuizizz(
   try {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile("static/quiz-templates/quizizz.xlsx");
+
     const worksheet = workbook.getWorksheet(1); // or you can use the name of the worksheet
 
     let rowCount = 3;
@@ -83,14 +83,8 @@ async function processQuizizz(
       worksheet.insertRow(rowCount, row);
     }
 
-    // worksheet.eachRow((row, rowNumber) => {
-    //   console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
-    // });
-    console.log("DIR: ", process.cwd());
     const sheet = workbook.getWorksheet(1);
-    sheet.eachRow((row, rowNumber) => {
-      console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
-    });
+    sheet.eachRow((row, rowNumber) => {});
 
     let filename: String = collection.name + "-" + Date.now().toString(36);
     await workbook.xlsx.writeFile(`./uploads/${filename}.xlsx`);
